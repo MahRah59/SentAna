@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+       
+       
+<style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .result-section {
+            margin-bottom: 20px;
+        }
+        .result-section p {
+            margin: 5px 0;
+        }
+       
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .top-right-buttons {
+        float: right;
+        margin-top: 10px; /* Adjust the margin as needed */
+        margin-left: 10px;
+        }
+
+        .download-btn {
+        display: inline-block;
+        margin-right: 10px;
+        color: black;
+        font-size: 12px;
+        padding: 10px ;
+        border: goldenrod;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: goldenrod;
+        }
+        select {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        select:hover {
+            background-color: goldenrod;
+        }
+        
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #0073e6;
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+            display: inline-block;
+        }
+        a:hover {
+            background-color: goldenrod;
+        }
+
+
+.info-text {
+    font-weight: bold;
+    font-size: 12px; 
+    color: #310dd1; 
+}
+
+.top-right-buttons p {
+  display: inline-block;
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+
+td {
+    text-align: center;
+  }
+    tr {
+    min-height: 10px;
+    }   
+    
+    .download-options {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+    .label {
+        font-size: 1.2em;
+        margin-right: 10px;
+    }
+/*
+    .dropdown {
+        font-size: 1em;
+        padding: 5px 10px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .download-btn {
+        display: inline-block;
+        margin-right: 10px;
+        color: black;
+        font-size: 12px;
+        padding: 10px ;
+        border: goldenrod;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .download-btn:hover {
+        background-color: #45a049;
+    }
+    */
+</style>
+
+</head>
+
+
+<body style="background-color: lightblue;">
+
+    <div class="top-right-buttons">
+        <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+        <button onclick="window.location.href='{{ url_for('main.logout') }}'">Logout</button>
+
+    </div> 
+ 
+      
+      <h3 style="text-align: center; margin-top: 5px;">Sentiment Analysis Results</h3>
+<!--
+    <p class="info-text"><strong>Input Type:</strong> {{ input_type }}</p>
+    <p class="info-text"><strong>Input Value:</strong> {{ input_value }}</p>
+
+-->
+
+    <div class="download-btn">
+        <label for="file-format"></label>
+        <select id="file-format">
+            <option value="pdf">PDF</option>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+        </select>
+        <button id="download-button">Download</button>
+    </div>
+
+
+    <script>
+        document.getElementById('download-button').addEventListener('click', function () {
+            const format = document.getElementById('file-format').value;
+            if (format === 'csv') {
+                window.location.href = '/download/csv';
+            } else if (format === 'pdf') {
+                window.location.href = '/download/pdf';
+            } else if (format === 'json') {
+                window.location.href = '/download/json';
+            }
+        });
+    </script>
+        
+
+        <!--
+    <script>
+        function downloadResult() {
+            const format = document.getElementById('file-format').value;
+    
+            // Show loading spinner
+            const button = document.querySelector('.download-btn');
+            button.innerHTML = 'Preparing...';
+            button.disabled = true;
+    
+            // Redirect for download
+            window.location.href = `/download_result?format=${format}`;
+    
+            // Restore button state after download (simulate a delay)
+            setTimeout(() => {
+                button.innerHTML = 'Download';
+                button.disabled = false;
+            }, 2000);
+        }
+    </script>
+    -->
+    <table border="1">
+        <colgroup>
+            <col span="3" style="background-color: #D6EEEE">
+            <col span="3" style="background-color: #eee1d6">          
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Channel Name</th>
+                <th>Description</th>
+                <th>Sentiment</th>
+                <th>Total No of Views</th>
+                <th>Total No of Likes</th>
+                <th>Total No of Dislikes</th>
+            </tr>
+            <tr>
+                <td>{{ channel.name }}</td>
+                <td>{{ channel.description }}</td>
+                <td>{{ channel.sentiment }}</td>
+                <td>{{ channel.views }}</td>
+                <td>{{ channel.likes }}</td>
+                <td>{{ channel.dislikes }}</td>
+
+            </tr>
+            
+        </thead>
+        <tbody>
+
+            <tr style="background-color: red;">
+                <th> </th>
+                <th> </th>
+                <th> </th>
+                <th> </th>
+                <th>  </th>
+                <th>  </th>
+            </tr>
+            <tr style="background-color: red;">
+                <th> </th>
+                <th> </th>
+                <th> </th>
+                <th> </th>
+                <th>  </th>
+                <th>  </th>
+            </tr>
+            <tr style="background-color: red;">
+                <th> </th>
+                <th> </th>
+                <th> </th>
+                <th> </th>
+                <th>  </th>
+                <th>  </th>
+            </tr>
+         
+
+            <tr>
+                <th>Video Title</th>
+                <th>Description</th>
+                <th>Sentiment</th>
+                <th>No of Views</th>
+                <th>No of Likes</th>
+                <th>No of Dislikes</th>
+            </tr>
+            
+            {% for video in videos %}
+            <tr>
+                <td>{{ video.title }}</td>
+                <td>{{ video.description }}</td>
+                <td>{{ video.sentiment }}</td>
+                <td>{{ video.views }}</td>
+                <td>{{ video.likes }}</td>
+                <td>{{ video.dislikes }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="buttons">
+        <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </div>
+</body>
+</html>

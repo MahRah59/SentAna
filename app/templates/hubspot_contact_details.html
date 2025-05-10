@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HubSpot Contact Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .details {
+            background-color: bisque;
+            margin: 20px auto;
+            width: 60%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 25px;
+        }
+
+        body {
+            background-color: powderblue;
+        }
+
+        .container {
+            font-size: small;
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        button {
+            margin: 5px 0;
+        }
+
+        .top-right-buttons p {
+            float: right;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            border: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .CRM-buttons {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<div class="top-right-buttons">
+    <p><a href="{{ url_for('main.logout') }}">Logout</a></p>
+</div>
+
+<body>
+    <h1>Contact Details</h1>
+    <div class="details">
+        <p><strong>First Name:</strong> {{ contact['properties'].get('firstname', 'N/A') }}</p>
+        <p><strong>Last Name:</strong> {{ contact['properties'].get('lastname', 'N/A') }}</p>
+        <p><strong>Email:</strong> {{ contact['properties'].get('email', 'N/A') }}</p>
+        <p><strong>Phone:</strong> {{ contact['properties'].get('phone', 'N/A') }}</p>
+        <p><strong>Company:</strong> {{ contact['properties'].get('company', 'N/A') }}</p>
+        <p><strong>Created Date:</strong> {{ formatted_date or 'N/A' }}</p>
+
+    </div>
+
+
+
+    <div class="CRM-buttons">
+        <a href="{{ url_for('main.hubspot_contacts') }}">Back to Contacts</a>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="{{ url_for('main.sentimentanalysis') }}">Back to SentAna Analyze</a>
+    </div>
+
+</body>
+
+</html>

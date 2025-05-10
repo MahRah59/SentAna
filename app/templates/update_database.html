@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Database</title>
+    <style>
+        .form-container {
+            display: none;
+        }
+        .form-container.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Update Database</h1>
+
+    <!-- Navigation Links -->
+    <nav>
+        <ul>
+            <li><a href="#" id="order-link">Update Order</a></li>
+            <li><a href="#" id="service-link">Update Service</a></li>
+            <li><a href="#" id="product-link">Update Product</a></li>
+        </ul>
+    </nav>
+
+    <!-- Forms Section -->
+
+    <div id="delivery-form" class="form-container">
+        <h2>Update Delivery</h2>
+        <form method="POST" action="/update_database">
+            {{ delivery_form.hidden_tag() }}
+            {{ delivery_form.order_id.label }} {{ delivery_form.order_id() }}<br>
+            {{ delivery_form.status.label }} {{ delivery_form.status() }}<br>
+            {{ delivery_form.purchase_date.label }} {{ delivery_form.purchase_date() }}<br>
+            {{ delivery_form.Shipped_date.label }} {{ delivery_form.Shipped_date() }}<br>
+            {{ delivery_form.Delivery_date.label }} {{ delivery_form.Delivery_date() }}<br>
+            <input type="hidden" name="form_type" value="order">
+            {{ delivery_form.submit() }}
+        </form>
+    </div>
+    <div id="service-form" class="form-container">
+        <h2>Update Service</h2>
+        <form method="POST" action="/update_database">
+            {{ service_form.hidden_tag() }}
+            <input type="hidden" name="form_type" value="service">
+            {{ service_form.service_type.label }} {{ service_form.service_type() }}<br>
+            {{ service_form.description.label }} {{ service_form.description() }}<br>
+            {{ service_form.additional_information.label }} {{ service_form.additional_information() }}<br>
+            {{ service_form.availability.label }} {{ service_form.availability() }}<br>
+            {{ service_form.submit() }}
+        </form>
+    </div>
+
+    <div id="product-form" class="form-container">
+        <h2>Update Product</h2>
+        <form method="POST" action="/update_database">
+            {{ product_form.hidden_tag() }}
+            <input type="hidden" name="form_type" value="product">
+            {{ product_form.product_name.label }} {{ product_form.product_name() }}<br>
+            {{ product_form.specifications.label }} {{ product_form.specifications() }}<br>
+            {{ product_form.additional_information.label }} {{ product_form.additional_information() }}<br>
+            {{ product_form.release_date.label }} {{ product_form.release_date() }}<br>
+            {{ product_form.price.label }} {{ product_form.price() }}<br>
+            {{ product_form.submit() }}
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("order-link").onclick = function() {
+            toggleForm("order-form");
+        };
+        document.getElementById("service-link").onclick = function() {
+            toggleForm("service-form");
+        };
+        document.getElementById("product-link").onclick = function() {
+            toggleForm("product-form");
+        };
+
+        function toggleForm(formId) {
+            // Hide all forms
+            var forms = document.querySelectorAll(".form-container");
+            forms.forEach(function(form) {
+                form.classList.remove("active");
+            });
+            // Show the selected form
+            document.getElementById(formId).classList.add("active");
+        }
+    </script>
+</body>
+</html>

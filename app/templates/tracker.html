@@ -1,0 +1,129 @@
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Analysis Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td[contenteditable="true"] {
+            background-color: #fff8dc;
+        }
+        .action-buttons {
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Internet Article URL Tracker</h1>
+    <p>Edit directly in the table and your edits will be saved automatically.</p>
+
+    <div class="action-buttons">
+        <button class="btn" onclick="addRow()">➕ Add Row</button>
+        <button class="btn" onclick="downloadCSV()">⬇️ Download CSV</button>
+    </div>
+
+    <table id="trackerTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Subject</th>
+                <th>Observation Type</th>
+                <th>Issue/Comment</th>
+                <th>Suggested Fix</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table_rows %}
+            <tr>
+                {% for cell in row %}
+                <td contenteditable="true" oninput="autoSave()">{{ cell }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function downloadCSV() {
+            let csv = [];
+            const rows = document.querySelectorAll("table tr");
+            for (let row of rows) {
+                const cols = row.querySelectorAll("td, th");
+                let rowData = [];
+                for (let col of cols) {
+                    rowData.push('"' + col.innerText.replace(/"/g, '""') + '"');
+                }
+                csv.push(rowData.join(","));
+            }
+            const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+            const downloadLink = document.createElement("a");
+            downloadLink.download = "tracker_table.csv";
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+        }
+
+        function autoSave() {
+            const table = document.querySelector("#trackerTable");
+            const rows = table.querySelectorAll("tbody tr");
+            const data = [];
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                const rowData = Array.from(cells).map(cell => cell.innerText);
+                data.push(rowData);
+            });
+
+            fetch("/save_tracker_data", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ table: data })
+            });
+        }
+
+        function addRow() {
+            const table = document.querySelector("#trackerTable tbody");
+            const rowCount = table.rows.length + 1;
+            const newRow = table.insertRow();
+            for (let i = 0; i < 6; i++) {
+                const cell = newRow.insertCell();
+                cell.contentEditable = true;
+                cell.setAttribute("oninput", "autoSave()");
+                cell.innerText = i === 0 ? rowCount : "";
+            }
+            autoSave();
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

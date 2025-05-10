@@ -1,0 +1,96 @@
+0,Internet Search,,,,
+1,Internet Search,Irrelevant: No company name or keyword,"Keyword missing, No company name and No keyword although the URL is in the search results list. Filter (disallowed, company name, ...)","Improve query , queries are same when search with google?","Pending, implement tomorrow"
+2,Internet Search,Excluded but has 200+ characters,"Possibly misclassified, size of text ? [URL placeholderhttps://www.nkt-no.com/referanser/power-cable-with-low-carbon-materials]",Re-evaluate content length filter,Reviewing
+3,Internet Search,"Starts with image, relevant text after",Image blocks early analysis? ,Add image-skip for early enrichment,To Test
+4,Internet Search,PDF URL - excluded too early,Skipped due to timing or size,PDF processing or allow long wait,Planned
+5,Internet Search,Inner link with relevant content,Outer page is a directory,Scan inner link (1-level deep),Pending
+7,,,,,
+7,Internet Search,Profile misclassified as relevant,Relevance matched only one weak keyword (`service`) with no company mention https://linkedin.com/in/bartłomiej-walicki-18524a314,Add profile filtering for personal pages,To Do
+8,Internet Search,Relevance Logging,Logs were repeated multiple times for this article https://cirio.se/en/sectors/energy-infrastructure/infrastructure,Avoid duplicate logging in debug loop,Done
+9,Internet Search,Score calculation,No relevance score was stored in tracker,Add `relevance_score` column and scoring logic,In Progress
+10,Internet Search,Tagging,"Topics like `offshore_wind`, `esg`, etc., not tracked yet",Add lightweight tag inference function Add a TAG field to the Internet Article form,In Progress
+11,Internet Search,Keyword filtering,Generic keywords like `service` may give false positives: [Soft vs Strong keywords],Split into strong/soft keywords and weight differently,Done
+12,Gnews source,No results returned,Gnews source failed to return results again,Investigate endpoint or API blocking,Open
+13,Internet Search,Convert to same languae,Articles can be in different languages,Detect language and translate to desired language or separate them and generate different analysis then combine....,Open
+15,Internet Search,,Improve execution time !,,
+16,Internet Search,,Translation is failed,,
+17,Internet Search,,"Final_relevant = ? , is it correct?",,
+18,General,,Generated Scores: Are they correct? ,,
+19,Sentiment Analysis,,Scores created by VADER and Transformer: Very Different,,
+20,Test (online),,Make inputs available (online) for testers,,
+21,SentAna Launch,,"1. Own Server 2. Own Domain 3. Resume Own Company? (costs, ...) 3. ISP ( Price, provides? Email, Uploading New Release, ",,
+22,Social Media Platforms,,"1. Which one is possible to test without cost? 2. API Cost For Test: (X: ?, Instagram: ?, FB: ?, YT: ?, Redit: ?, ....) Test with Real Social Media Data (Future) – Decide whether to integrate real API connections for Twitter, YouTube, etc.",,
+23,Voice Features,,"1. Chatbot 2. Real Time Analysis: Meeting, Conference,  3. Downloading a Speech 4. Movie  5. Voice Book Use case: Customer service call recordings, video testimonials. Implementation: Combine NLP for text and models like Wav2Vec for audio processing. .... Hate Speech/Offensive Content Detection What it is: Identify and filter out toxic or offensive comments. Use case: Protecting brand image on social media platforms. Implementation: Use pre-trained models like HateBERT or fine-tune on datasets like OLID.",,
+24,Unique Features,,1. 2. 3. ,,
+25,Display Results,,"1.Unify all results.html blocks (emotion, ABSA, transformer) into reusable sections 2. Consistent labels, spacing, layout (e.g., all show predicted score + score list)",,
+26,ABSA (Multi Aspects),,"1. Expand from aspect-based sentiment analysis (ABSA) to aspect-based trend analysis, ensuring it works for large datasets over time. 2. Use a model (like LCF-BERT or PyABSA) to extract multiple aspects 3. Group results: Aspect: camera → Sentiment: positive → Score: 0.82 → Bar charts per aspect",,
+27,"Expand Simulators (Text, Emotion, YouTube)",,1. Make them modular and accessible via your app UI (simulate > analyze) 2. Add option to simulate emotion/ABSA data into SentAna with toggle,,
+28,Save Results and Enable Analysis History,,"1. Store analysis results in the database with: Text, Models used, Scores, Timestamp 2. Build a ""View Past Analysis"" page",,
+29,Polish Trend Analysis,,"1. Highlight changes over time 2.Add sentiment + emotion trends in one chart 3.Future: add AI summary of trend shifts (""Sentiment declined in March due to..."")",,
+30,Final Visual Touches,,1. Mobile-responsive layout 2. Smooth transitions between sections (JS scroll / fade in) 3.Add intro walkthrough or tooltips,,
+31,Chatbot,,"1. Improve Chatbot database , Intents, Yml Data, .. Voice Chat Improvement of Database (Products, Services, Delivery Improvement of  Chat-Messages Databse Improvement of YML module, i.e. intent specifications, rules, etc Refine Escalation Detection in Sentiment & Emotion Analysis – Improve the escalation logic to alert human agents when necessary. Interaction with CRM Store chat summary what else?",,
+32,Trend Analysis ,,"1.Start Trend Analysis: hide submit OR initiate Trend Analysis in other way Add/Implement Emotion Detection Review  and improve grouping by period, time_scale, comparisons, departments, etc Finalize Multi-File Handling in Trend Analysis – Ensure that multiple files representing different time periods are correctly grouped and analyzed. Complete display options for text and table Expand Trend Analysis Input Sources – Beyond text/chat, consider integrating files, datasets, and structured data for trend analysis. Optimize Data Storage for Trend Analysis – Store processed trend data efficiently without redundancy.",,
+33,CRM,,CRM Integration Define a complete list of features for SentAna - CRM Integration Enhance Sentiment & Emotion Logging in CRM – Ensure chat messages with sentiment and emotion scores are logged properly in HubSpot.,,
+34,Business Cases,,Integrate Business Use Cases – Start defining how businesses can use the app for business insights and decision-making.,,
+35,,,"Improve Reporting & Visualization Features – Ensure sentiment and trend reports are clear, actionable, and easy to export.",,
+36,Optimization,,"Ensure Scalability for Large-Scale Data Processing – Optimize app performance to handle increasing message volume, files, and trend analysis requests.",,
+37,Fake News/Spam Detection,,"What it is: Identify whether the analyzed content is authentic or fabricated. Use case: Helpful for detecting bots or misinformation in social media data. Implementation: Use models fine-tuned on fake news datasets (e.g., LIAR, FakeNewsNet) or spam detection datasets.",,
+38,Fine-Grained Contextual Analysis,,"What it is: Analyze specific contexts within text (e.g., ""regret"" as an emotion vs. ""neutral"" in a business context). Use case: Professional settings like HR or customer service. Implementation: Train models using custom datasets in specific domains.",,
+39,Features Planing,see document about Algorithm,see document about Algorithm,see document about Algorithm,
+40,Tools SentAna is using,,1. list of tools  2. list of packages installed :      pip list,,
+41,Tools and Packages,,"1. How about if new versions are launched, impact on APP 2. All Third party API:s and Packages are used.",,
+42,"Fix emotion grouping for multiple/single file High 🟡 To Do Clarify/require aspect input for ABSA High 🟡 To Do UI message for missing timestamps Medium ✅ Done Add default group like ""General"" if no timestamp Medium 🟡 Optional",Fix emotion grouping for multiple/single file,"
+","
+","
+",🟡 To Do,"
+","
+","
+","
+","
+","
+","
+","
+",🟡 ,,
+Fix emotion grouping for multiple/single file,High,🟡 To Do
+Clarify/require aspect input for ABSA,High,🟡 To Do
+UI message for missing timestamps,Medium,✅ Done
+"Add default group like ""General"" if no timestamp",Medium,🟡 Optional
+43,"Suggestions for ABSA Inputs: Aspect Field Required: Add required form field: aspect_input = ""Product X"" Without aspect, ABSA won’t extract anything meaningful. Fallback Logic: If no aspect is provided, either: Use most frequent nouns? (requires NLP) Skip ABSA & warn user Or list suggestions (from a known list) Multiple File / Chat Messages ABSA: Treat each file or message group as input with the same aspect For chat: use same logic if user provides a business-relevant aspect (e.g., ""delivery"")",,"
+",,
+44,"routes.py (line 1334):     is not defined:      timestamped_sentences =extract_sentences_with_timestamps(aspect, large_text_data)",,"
+",,
+45,Emotion Analysis,1- current implementation: mock data 2- Add text (correct it ) 3- Add file/multi file 4- Add Social Media if not included,"advanced_type ='emotion' # Mock data for demonstration mock_comments = process_mock_emotion_input(text, n=100) emotion_results = predict_emotions(mock_comments)",,"3 points are done. 
+
+
+point 4: pending"
+46,Trend Analysis,Show the entire trend over all perios,"
+",,Done
+47,Chat bot & Omdöme ,Omdöme Sidann,"1- add a formm for customer feedback
+2- Sentiment, Emotion, Trend Analysis in real time and Post-feedback
+3- ",,
+48,Sentiment VS Emotion,when to do sentiment analysis inclusive trend analysis  and when emotion?,,,
+53,Generate Suggestions and Improvement proposal,"VERY IMPORTANT!
+-----
+Generate Proposals....",,,
+54,GIU,"Back Button:
+Back to Sentiment doesn't work as desired",,,
+55,"Sentiment
+ ",Revise : only 512 tokens?,Chunked with each chunk =512 tokens,,Done
+56,Emotin,Revise : only 512 tokens?,Chunked with each chunk =512 tokens,,Done
+57,Emotion,display text for Emotion,Fixed,,Done
+58,VPN,VPN,,,
+59,Emotion,Emotion Dictionary,"Define a dictionary Emotion _image = laugh out loud, Love, happy, sad, ......",,
+60,Emotion ,Large_text as comments,should not be chunked,,
+61,"Show 20 rows at a time instead of 10,
+
+Add a ""Show All"" or ""Collapse All"" toggle,
+
+Or paginate the chunks like pages (e.g., page 1, 2, 3...),",,,,
+62,"Patch processing done for emotions only 
+Apply for TA, ABSA and ABSA_TA.",,"Show 20 rows at a time instead of 10,
+
+Add a ""Show All"" or ""Collapse All"" toggle,
+
+Or paginate the chunks like pages (e.g., page 1, 2, 3...),",,
+63,,,,,
+64,,,,,

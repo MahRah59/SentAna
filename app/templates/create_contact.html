@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF Token -->
+
+    <title>CRM Contact Creation</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .details {
+            background-color: bisque;
+            margin: 20px auto;
+            width: 60%;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 25px;
+        }
+        body {
+            background-color: powderblue;
+        }
+
+        .container {
+            font-size: small;
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        button {
+            margin: 5px 0;
+        }
+
+        .top-right-buttons p {
+            float: right;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            border: 10px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .CRM-buttons {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-right-buttons">
+        <p><a href="{{ url_for('main.logout') }}">Logout</a></p>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align: center; margin-top: 5px;">Create CRM Contact</h3>
+
+        <form method="POST" action="{{ url_for('main.create_CRM_contact') }}">
+            {{ form.hidden_tag() }}
+            <br><br><br> <br>
+
+            <label for="firstname">First Name:</label>
+            {{ form.firstname(size=30) }}
+            <br><br><br> <br>
+
+            <label for="lastname">Last Name:</label>
+            {{ form.lastname(size=30) }}
+            <br><br><br> <br>
+
+            <label for="email">Email:</label>
+            {{ form.email(size=30) }}
+            <br><br><br> <br>
+
+            <label for="phone">Phone:</label>
+            {{ form.phone(size=30) }}
+            <br><br><br> <br>
+
+            <button type="submit">{{ form.submit() }}</button>
+        </form>
+        
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="{{ url_for('main.sentimentanalysis') }}">Back to SentAna Analyze</a>
+    </div>
+</body>
+
+</html>
+

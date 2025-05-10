@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Trend Analysis</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            background-color: powderblue;
+        }
+
+        /* Ensure tables are stacked vertically */
+        .container table {
+            width: 100%;
+            margin-bottom: 20px;
+            /* Add space below each table */
+            border-collapse: collapse;
+            /* Optional: To remove extra space between table cells */
+        }
+
+        /* Optional: Add some space between sections */
+        .form-group {
+            background-color: beige;
+            padding-bottom: 1px;
+            border-radius: 15px;
+            background-color: #f0f0f0;
+        }
+
+
+        .tooltip-icon {
+            cursor: pointer;
+            color: #007bff;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+
+        .tooltip-icon:hover {
+            color: #0056b3;
+        }
+
+        /* Optional: Add space above the first table */
+        .container {
+            margin-top: px;
+            scroll-padding-top: 10px;
+            height: 100vh; /* Set height to 80% of viewport height */
+        }
+
+        /* If needed, set clear fix for layout issues */
+        .clearfix::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .container {
+            padding-left:  20px;
+            padding-right:20px;
+            padding-top: 30px;
+            padding-bottom: 1px;
+            font-size: medium;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .top-right-buttons p {
+            float: right;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: aqua;
+            text-decoration: none;
+            font-size: 17px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .top-left-buttons p {
+            float: left;
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: aqua;
+            text-decoration: none;
+            font-size: 17px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+
+        .form-container {  
+            width: 100%;
+            padding: 1px;
+            background-color: beige ;
+            border-radius: 8px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .submit-btn button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-right-buttons">
+        <p><a href="{{ url_for('main.logout') }}" style="color: black;">Logout</a></p>
+    </div>
+
+    <div class="top-left-buttons">
+        <p><a href="{{ url_for('main.sentimentanalysis') }}" style="color: black;">Back to Sentiment Analysis</a></p>
+    </div>
+
+    <div class="container">
+        <!-- Form Container with Dynamic Input Fields -->
+        <div class="form-container">
+            <h2>Trend Analysis</h2>
+
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <!-- Select Trend Analysis Type -->
+                <div class="form-group">
+                    <label for="trend_analysis_type">{{ form.trend_analysis_type.label }}</label>
+                    {{ form.trend_analysis_type() }} <!-- This should render the dropdown with values -->
+                </div>
+                
+                <!-- Select Start Date -->
+                <div class="form-group">
+                    <label for="start_date">{{ form.start_date.label }}</label>
+                    {{ form.start_date() }}
+                </div>
+
+                <!-- Select End Date -->
+                <div class="form-group">
+                    <label for="end_date">{{ form.end_date.label }}</label>
+                    {{ form.end_date() }}
+                </div>
+
+                <!-- Select Time Scale -->
+                <div class="form-group">
+                    <label for="trend_time_scale">{{ form.trend_time_scale.label }}</label>
+                    {{ form.trend_time_scale() }}
+                </div>
+
+                <!-- Select User ID -->
+                <div class="form-group">
+                    <label for="user_id">{{ form.user_id.label }}
+                        <span class="tooltip-icon" data-toggle="tooltip"
+                            title="This field is mandatory for user_based trend analysis, which is normaly done for post chat_messages analysis. Here we have two cases: A) one user and one chat-sesion B) one user and multi-chat-sessions">(i)</span></label>
+                    {{ form.user_id() }}
+                </div>
+                
+                <!-- Select Session ID -->
+                <div class="form-group">
+                    <label for="session_id">{{ form.session_id.label }}</label>
+                        <span class="tooltip-icon" data-toggle="tooltip"
+                            title="This field is mandatory for session_based trend analysis, which is normaly done for post chat_messages analysis. Here we have 2 cases: A) one user and one chat-sesion B) one user and multi-chat-sessions">(i)</span></label>
+                    {{ form.session_id() }}
+                </div>
+
+                    <!-- Select/search user ID  -->
+
+                <div class="form-group">
+                    <label for="user_id">Select User</label>
+                    <input type="text" id="user-search" class="form-control" placeholder="Search for a user by name or email">
+                    <button id="search-button" class="btn btn-primary" type="button">Search</button>
+                    
+                    <select id="user-dropdown" name="user_id" class="form-control">
+                        <option value="">Select User</option>
+                        <!-- Users will be populated dynamically here -->
+                    </select>
+                </div>
+                
+                <!-- Select Session ID (dependent on user selection) -->
+                <div class="form-group">
+                    <label for="session_id">Select Session</label>
+                    <select id="session-dropdown" name="session_id" class="form-control">
+                        <option value="">Select Session</option>
+                        <!-- Session IDs will be populated dynamically here based on user selection -->
+                    </select>
+                </div>
+
+                <!-- Social Media Platform Selection -->
+                <div class="form-group">
+                    <label for="platform">{{ form.platform.label }}</label>
+                    {{ form.platform() }}
+                </div>
+
+                <!-- Platform Specific Fields -->
+                <div id="twitter-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="twitter_handle">{{ form.twitter_handle.label }}</label>
+                        {{ form.twitter_handle() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="twitter_url">{{ form.twitter_url.label }}</label>
+                        {{ form.twitter_url() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="twitter_Mock_text">{{ form.twitter_Mock_text.label }}</label>
+                        {{ form.twitter_Mock_text() }}
+                    </div>
+                </div>
+
+                <div id="youtube-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="youtube_channel">{{ form.youtube_channel.label }}</label>
+                        {{ form.youtube_channel() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="youtube_video">{{ form.youtube_video.label }}</label>
+                        {{ form.youtube_video() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="youtube_Mock_channel">{{ form.youtube_Mock_channel.label }}</label>
+                        {{ form.youtube_Mock_channel() }}
+                    </div>
+                </div>
+
+                <div id="facebook-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="facebook_page">{{ form.facebook_page.label }}</label>
+                        {{ form.facebook_page() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="facebook_post">{{ form.facebook_post.label }}</label>
+                        {{ form.facebook_post() }}
+                    </div>
+                </div>
+
+                <div id="instagram-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="instagram_account">{{ form.instagram_account.label }}</label>
+                        {{ form.instagram_account() }}
+                    </div>
+                    <div class="form-group">
+                        <label for="instagram_post">{{ form.instagram_post.label }}</label>
+                        {{ form.instagram_post() }}
+                    </div>
+                </div>
+
+                <!-- Display Options -->
+                <div class="form-group">
+                    <label for="trend_display_options">{{ form.trend_display_options.label }}</label>
+                    {{ form.trend_display_options() }}
+                </div>
+
+                <!-- Submit Button -->
+                <!-- Two separate buttons for Sentiment and Emotion analysis -->
+                <div class="submit-btn">
+                    <button type="submit" name="analysis_type" value="sentiment" class="btn btn-primary">Start Sentiment
+                        Trend Analysis</button>
+                    <button type="submit" name="analysis_type" value="emotion" class="btn btn-primary">Start Emotion
+                        Trend Analysis</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function() {
+            // Event listener for the search button
+            $('#search-button').click(function() {
+                const searchQuery = $('#user-search').val();
+    
+                // Make an AJAX request to search for the user
+                $.ajax({
+                    url: '/search_user',
+                    method: 'GET',
+                    data: { search_query: searchQuery },
+                    success: function(response) {
+                        if (response.success) {
+                            // Populate the user dropdown with search results
+                            const users = response.users;
+                            $('#user-dropdown').empty(); // Clear existing options
+                            $('#user-dropdown').append('<option value="">Select User</option>');
+                            users.forEach(user => {
+                                $('#user-dropdown').append(`<option value="${user.id}">${user.first_name} ${user.last_name} (${user.email})</option>`);
+                            });
+                        } else {
+                            alert('User not found');
+                        }
+                    }
+                });
+            });
+    
+            // Event listener for user selection
+            $('#user-dropdown').change(function() {
+                const userId = $(this).val();
+                if (userId) {
+                    // Make an AJAX request to get the session IDs for the selected user
+                    $.ajax({
+                        url: '/get_sessions_for_user',
+                        method: 'GET',
+                        data: { user_id: userId },
+                        success: function(response) {
+                            if (response.success) {
+                                // Populate the session dropdown with the fetched session IDs
+                                const sessionIds = response.sessions;
+                                $('#session-dropdown').empty(); // Clear existing options
+                                $('#session-dropdown').append('<option value="">Select Session</option>');
+                                sessionIds.forEach(sessionId => {
+                                    $('#session-dropdown').append(`<option value="${sessionId}">${sessionId}</option>`);
+                                });
+                            } else {
+                                alert('No sessions found for the selected user');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            // Function to show/hide platform-specific fields
+            function togglePlatformFields() {
+
+                // Enable tooltips for the tooltip icon
+                const platform = $('input[name="platform"]:checked').val();
+                $('#twitter-fields, #youtube-fields, #facebook-fields, #instagram-fields').hide();
+                if (platform) {
+                    $(`#${platform}-fields`).show();
+                }
+            }
+
+            $(document).ready(function () {
+                // Enable tooltips for the tooltip icon
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
+            // Event listener for platform change
+            $('input[name="platform"]').on('change', function () {
+                togglePlatformFields();
+            });
+
+            // Initialize visibility on page load
+            togglePlatformFields();
+        });
+    </script>
+
+</body>
+
+</html>

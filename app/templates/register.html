@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        body {
+            background-color: powderblue;
+        }
+
+        .form-container {
+            max-width: 30vw;
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            background-color: #f9f9f9;
+        }
+
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group button {
+            padding: 16px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+    <title>Sign Up </title>
+
+
+</head>
+
+<body>
+
+    <body class="register-page">
+        <div class="form-container">
+            <h3
+                style="text-align: center; margin-top: 10px; padding:5px; background-color: rgb(3, 158, 255); border-radius: 10px;">
+                Sign Up </h3>
+            <form action="{{ url_for('main.register') }}" method="post">
+                {{ form.hidden_tag() }}
+
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    {{ form.username(class="form-control") }}
+                </div>
+
+                <!-- First Name -->
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    {{ form.first_name(class="form-control") }}
+                </div>
+
+                <!-- Last Name -->
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    {{ form.last_name(class="form-control") }}
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    {{ form.email(class="form-control") }}
+                </div>
+
+                <!-- Phone -->
+                <div class="form-group">
+                    {% if form.phone %}
+                    <label for="phone">Phone</label>
+                    {{ form.phone(class="form-control") }}
+                    {% endif %}
+
+                </div>
+
+                <!-- Company -->
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    {{ form.company(class="form-control") }}
+                </div>
+
+                <!-- Role -->
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    {{ form.role(class="form-control") }}
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    {{ form.password(class="form-control") }}
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    {{ form.confirm_password(class="form-control") }}
+                </div>
+
+                <div class="form-group" style="padding: 15px; ">
+                    <button type="submit">Register</button>
+                </div>
+            </form>
+        </div>
+
+
+    </body>
+
+</html>

@@ -1,0 +1,91 @@
+### Updated `nlu.yml`
+
+version: "3.1"
+
+nlu:
+  
+  - intent: greet
+    examples: |
+      - Hi
+      - Hello
+      - Hey
+      - Hi there
+      - Good morning
+
+  - intent: thank_you
+    examples: |
+      - Thank you
+      - Thanks a lot
+      - I appreciate it
+      - Thanks
+
+  - intent: affirm
+    examples: |
+      - yes
+      - indeed
+       - sure
+      - absolutely
+
+  - intent: deny
+    examples: |
+      - no
+      - not really
+      - never mind
+
+  - intent: goodbye
+    examples: |
+      - Goodbye
+      - Bye
+      - See you later
+      - Bye for now
+
+  - intent: ask_product_info
+    examples: |
+      - Tell me about [phone](product_name)
+      - What are the specifications of [laptop](product_name)?
+      - I need details about [tablet](product_name)
+      - Can you provide information about [smartwatch](product_name)?
+      - What's the price of [charger](product_name)?
+      - Give me details for [headphone](product_name)
+      - Show me the specifications of [speaker](product_name)
+      - I want to know more about [monitor](product_name)
+      - Tell me about [phone10](product_name)
+      - Details for [laptop10](product_name), please
+      - I need specifications of [tablet10](product_name)
+      - How much is the [smartwatch10](product_name)?
+      - What's included with [charger](product_name)?
+      - I’m looking for information on [headphone](product_name)
+      - Can you tell me more about [speaker](product_name)?
+      - Provide details for [monitor](product_name)
+
+  - intent: ask_services_available
+    examples: |
+      - What services do you offer?
+      - Do you provide [maintenance](service_type) services?
+      - Do you provide [installation](service_type) services?
+      - Do you provide [repair](service_type) services?
+      - tell me about [repair_Lux](service_type) services?
+      - how about [O&M](service_type) services?
+      - what about [SW uppgrade](service_type) services?
+      - what about [Customer Support](service_type) services?
+      - what services do you offer (service_type)?
+
+
+
+  - intent: track_order_status
+    examples: |
+      - Track my order
+      - What's the status of my order?
+      - Can you check the status of my order?
+      - Where is my order?
+      - I want to check my order status.
+      - Tell me about my order.
+      - Order [123](order_id)
+      - Track [345](order_id)
+      - My order ID is [678](order_id)
+
+
+
+ 
+
+ 

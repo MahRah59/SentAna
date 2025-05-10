@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script>
+        function showMoreComments() {
+            const hiddenComments = document.querySelectorAll('.hidden-comment');
+            hiddenComments.forEach(comment => {
+                comment.style.display = 'block';
+            });
+            document.getElementById('show-more-btn').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h1>Emotion Analysis Results</h1>
+
+    <!-- Emotion Scores Table -->
+    <h2>Emotion Scores (Aggregated)</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Emotion</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emotion, score in aggregated_emotions.items() %}
+            <tr>
+                <td>{{ emotion }}</td>
+                <td>{{ "%.2f" | format(score) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Comments Section -->
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in emotion_results[:10] %}
+        <li>{{ comment["comment"] }}</li>
+        {% endfor %}
+
+        {% for comment in emotion_results[10:] %}
+        <li class="hidden-comment" style="display: none;">{{ comment["comment"] }}</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Show More Button -->
+    {% if emotion_results|length > 10 %}
+    <button id="show-more-btn" onclick="showMoreComments()">Show More</button>
+    {% endif %}
+
+    <!-- Visualization Options -->
+    {% if display_option == 'bar_chart' or display_option == 'show_all' %}
+    <h2>Bar Chart</h2>
+    <img src="{{ bar_chart }}" alt="Bar Chart">
+    {% endif %}
+
+    {% if display_option == 'radar_chart' or display_option == 'show_all' %}
+    <h2>Radar Chart</h2>
+    <img src="{{ radar_chart }}" alt="Radar Chart">
+    {% endif %}
+
+    {% if display_option == 'word_cloud' or display_option == 'show_all' %}
+    <h2>Word Cloud</h2>
+    <img src="{{ word_cloud }}" alt="Word Cloud">
+    {% endif %}
+</body>
+</html>

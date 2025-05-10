@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection Results</title>
+
+    <style>
+        #results-container {
+            display: flex; /* Use flexbox for layout */
+            gap: 20px; /* Add space between columns */
+        }
+
+        #emotion-scores {
+            flex: 2; /* Let the table take up 1 part of the available space */
+            max-width: 40%; /* Limit the width of the table */
+        }
+
+        #comments-container {
+            flex: 1; /* Let the comments list take up 2 parts of the available space */
+            max-width: 60%; /* Limit the width of the comments */
+        }
+
+        #comments-preview, #comments-full {
+            list-style: none;
+            padding: 0;
+        }
+
+        #comments-preview li, #comments-full li {
+            margin-bottom: 5px;
+        }
+
+        #toggle-comments {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #toggle-comments:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Emotion Detection Results</h2>
+
+    <!-- Main Results Container -->
+    <div id="results-container">
+        <!-- Emotion Scores Table -->
+        <div id="emotion-scores">
+            <h3>Aggregate Emotion Scores</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Emotion</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emotion, score in results['emotions'].items() %}
+                    <tr>
+                        <td>{{ emotion }}</td>
+                        <td>{{ score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Comments Section -->
+        <div id="comments-container">
+            <h3>Comments</h3>
+            <ul id="comments-preview">
+                {% for comment in results['comments'][:10] %}
+                <li>{{ comment }}</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Full comments hidden initially -->
+            <ul id="comments-full" style="display: none;">
+                {% for comment in results['comments'] %}
+                <li>{{ comment }}</li>
+                {% endfor %}
+            </ul>
+
+            <!-- Toggle Button -->
+            <button id="toggle-comments" onclick="toggleComments()">Show More</button>
+        </div>
+    </div>
+
+    <!-- JavaScript for Show More/Less -->
+    <script>
+        function toggleComments() {
+            const fullComments = document.getElementById('comments-full');
+            const previewComments = document.getElementById('comments-preview');
+            const toggleButton = document.getElementById('toggle-comments');
+
+            if (fullComments.style.display === 'none') {
+                // Show full comments
+                fullComments.style.display = 'block';
+                previewComments.style.display = 'none';
+                toggleButton.textContent = 'Show Less';
+            } else {
+                // Show preview comments
+                fullComments.style.display = 'none';
+                previewComments.style.display = 'block';
+                toggleButton.textContent = 'Show More';
+            }
+        }
+    </script>
+</body>
+</html>

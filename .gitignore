@@ -1,0 +1,24 @@
+# Ignore virtual environments
+venv/
+new_venv/
+new_venv_3_10/
+app/venv/
+
+# Ignore system files
+__pycache__/
+.DS_Store
+
+# Ignore data dumps or large files
+*.tar.gz
+#*.mp4
+*.mov
+*.numbers
+*.db
+*.pdf
+*.npy
+*.pkl
+
+# Ignore logs and temporary files
+*.log
+logs/
+__pycache__/

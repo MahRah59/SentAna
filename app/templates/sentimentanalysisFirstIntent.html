@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <style>
+        .top-right-buttons p {
+            float: right;
+            display: inline-block;
+            margin-left: 10px;
+            /* Adjust the margin as needed */
+        }
+
+        #intent-classification-fields {
+            float: right;
+            margin-top: 10px;
+            padding-right: 60px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-right-buttons">
+        <p><a href="{{ url_for('main.logout') }}">Logout</a></p>
+    </div>
+
+
+    <body style="background-color:powderblue;">
+
+        <div class="container">
+            <!-- Section 1: Analyze Social Media -->
+            <h3 style="text-align: center; margin-top: 5px;">Sentiment Analysis Social Media</h3>
+
+
+
+
+            <form method="POST" action="{{ url_for('main.sentimentanalysis') }}">
+                {{ form.hidden_tag() }}
+
+                <!-- Analysis Mode -->
+                <div>
+                    <label>{{ form.analysis_mode.label }}</label>
+                    {{ form.analysis_mode(class="form-check-input") }}
+                </div>
+
+                <!-- Platform Selection -->
+                <div id="platform-section">
+                    <label>{{ form.platform.label }}</label>
+                    {{ form.platform(class="form-check-input") }}
+                </div>
+
+                <!-- Platform Sub-fields -->
+                <div id="platform-subfields">
+                    <!-- Twitter -->
+                    <div id="twitter-fields" class="platform-fields" style="display: none;">
+                        <label>{{ form.twitter_text.label }}</label>
+                        {{ form.twitter_text(class="form-control") }}
+
+                        <label>{{ form.twitter_handle.label }}</label>
+                        {{ form.twitter_handle(class="form-control") }}
+
+
+                        <label>{{ form.twitter_url.label }}</label>
+                        {{ form.twitter_url(class="form-control") }}
+
+                        <label>{{ form.twitter_Mock_text.label }}</label>
+                        {{ form.twitter_Mock_text(class="form-control") }}
+                    </div>
+
+                    <!-- YouTube -->
+                    <div id="youtube-fields" class="platform-fields" style="display: none;">
+
+                        <label>{{ form.youtube_text.label }}</label>
+                        {{ form.youtube_text(class="form-control") }}
+
+                        <label>{{ form.youtube_channel.label }}</label>
+                        {{ form.youtube_channel(class="form-control") }}
+
+                        <label>{{ form.youtube_video.label }}</label>
+                        {{ form.youtube_video(class="form-control") }}
+
+                        <label>{{ form.youtube_Mock_video.label }}</label>
+                        {{ form.youtube_Mock_video(class="form-control") }}
+
+                        <label>{{ form.youtube_Mock_channel.label }}</label>
+                        {{ form.youtube_Mock_channel(class="form-control") }}
+
+
+                    </div>
+
+                    <!-- Facebook -->
+                    <div id="facebook-fields" class="platform-fields" style="display: none;">
+                        <label>{{ form.facebook_text.label }}</label>
+                        {{ form.facebook_text(class="form-control") }}
+
+                        <label>{{ form.facebook_page.label }}</label>
+                        {{ form.facebook_page(class="form-control") }}
+
+                        <label>{{ form.facebook_post.label }}</label>
+                        {{ form.facebook_post(class="form-control") }}
+                    </div>
+
+                    <!-- Instagram -->
+                    <div id="instagram-fields" class="platform-fields" style="display: none;">
+                        <label>{{ form.instagram_text.label }}</label>
+                        {{ form.instagram_text(class="form-control") }}
+
+                        <label>{{ form.instagram_account.label }}</label>
+                        {{ form.instagram_account(class="form-control") }}
+
+                        <label>{{ form.instagram_post.label }}</label>
+                        {{ form.instagram_post(class="form-control") }}
+                    </div>
+
+                    <!-- File/Dataset -->
+                    <div id="file-fields" class="platform-fields" style="display: none;">
+                        <label>{{ form.file_upload.label }}</label>
+                        {{ form.file_upload(class="form-control") }}
+
+                        <label>{{ form.large_text.label }}</label>
+                        {{ form.large_text(class="form-control") }}
+
+                    </div>
+                    <!-- General -->
+
+                    <div id="general-fields" class="platform-fields" style="display: none;">
+                        <label>{{ form.general_text.label }}</label>
+                        {{ form.general_text(class="form-control") }}
+
+                    </div>
+
+                </div>
+
+                <!-- Basic Analysis Fields -->
+                <div id="basic-analysis-fields">
+                    <label>{{ form.basic_analysis_type.label }}</label>
+                    {{ form.basic_analysis_type(class="form-check-input") }}
+
+                    <label>{{ form.basic_display_options.label }}</label>
+                    {{ form.basic_display_options(class="form-check-input") }}
+                </div>
+
+
+                <!-- Advanced Analysis Fields -->
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <!-- Advanced Analysis Fields -->
+                    <div id="advanced-analysis-fields" style="display: none; flex: 1; margin-right: 20px;">
+                        <label>{{ form.advanced_analysis_type.label }}</label>
+                        {{ form.advanced_analysis_type(class="form-check-input") }}
+                    </div>
+
+                    <!-- Intent Classification Section -->
+                    <div id="intent-classification-fields" style="display: none;" flex 1;>
+                        <label>Intent Classification Method</label>
+                        {{ form.intent_classification_type(class="form-check-input") }}
+                    </div>
+
+                        <div id="chatbot-message-section" style="display: none;">
+                            <label>{{ form.chatbot_message.label }}</label>
+                            {{ form.chatbot_message(class="form-control") }}
+                            <button id="start-chat" class="btn btn-primary">Start Chat</button>
+                            <button id="quit-chat" class="btn btn-danger">Quit Chat</button>
+                            <button id="go-back" class="btn btn-secondary">Go Back to Sentiment Analysis</button>
+                        </div>
+                    </div>
+                    <!--  Advanced Display Options -->
+                    <label>{{ form.advanced_display_options.label }}</label>
+                    {{ form.advanced_display_options(class="form-check-input") }}
+                </div>
+
+
+
+
+                <!-- Submit Button -->
+
+                <button type="submit">Analyze</button>
+
+
+        </div>
+
+        </form>
+
+
+
+        <script>
+            $(document).ready(function () {
+                function toggleFields() {
+                    const mode = $('input[name="analysis_mode"]:checked').val();
+                    if (mode === 'basic') {
+                        $('#basic-analysis-fields').show();
+                        $('#advanced-analysis-fields').hide();
+                    } else {
+                        $('#basic-analysis-fields').hide();
+                        $('#advanced-analysis-fields').show();
+                    }
+                }
+
+                function togglePlatformSubfields() {
+                    const platform = $('input[name="platform"]:checked').val();
+                    $('.platform-fields').hide(); // Hide all platform fields
+                    if (platform === 'twitter') {
+                        $('#twitter-fields').show();
+                    } else if (platform === 'youtube') {
+                        $('#youtube-fields').show();
+                    } else if (platform === 'facebook') {
+                        $('#facebook-fields').show();
+                    } else if (platform === 'instagram') {
+                        $('#instagram-fields').show();
+                    } else if (platform === 'file') {
+                        $('#file-fields').show();
+                    } else if (platform === 'general') {
+                        $('#general-fields').show();
+                    }
+                }
+
+                // Initialize field visibility
+                toggleFields();
+                togglePlatformSubfields();
+
+                // Toggle fields based on mode change
+                $('input[name="analysis_mode"]').on('change', function () {
+                    toggleFields();
+                });
+
+                // Toggle platform subfields based on platform selection
+                $('input[name="platform"]').on('change', function () {
+                    togglePlatformSubfields();
+                });
+            });
+
+
+            $(document).ready(function () {
+                function toggleIntentClassificationSubfields() {
+                    const advancedType = $('input[name="advanced_analysis_type"]:checked').val();
+                    if (advancedType === 'intent_classification') {
+                        $('#intent-classification-fields').show();
+                    } else {
+                        $('#intent-classification-fields').hide();
+                    }
+                }
+
+                // Initialize the fields on page load
+                toggleIntentClassificationSubfields();
+
+                // Toggle fields based on advanced analysis type selection
+                $('input[name="advanced_analysis_type"]').on('change', function () {
+                    toggleIntentClassificationSubfields();
+                });
+            });
+
+
+            $('#quit-chat').on('click', function (e) {
+                e.preventDefault();
+                $('#chatbot-message-section').hide(); // Hide the chat section
+                $('#chatbot-message-section textarea').val(''); // Clear the message field
+                alert('You have quit the chat.');
+            });
+
+
+            $('#go-back').on('click', function (e) {
+                e.preventDefault();
+                $('#intent-classification-fields').hide(); // Hide intent classification fields
+                $('#advanced-analysis-fields').show(); // Show advanced analysis fields
+            });
+
+
+        </script>
+
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </body>
+
+</html>

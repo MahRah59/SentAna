@@ -1,0 +1,10 @@
+{
+  "0": "affirm",
+  "1": "ask_product_info",
+  "2": "ask_services_available",
+  "3": "deny",
+  "4": "goodbye",
+  "5": "greet",
+  "6": "thank_you",
+  "7": "track_order_status"
+}

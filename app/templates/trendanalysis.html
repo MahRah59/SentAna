@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Trend Analysis</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        body {
+            background-color: beige;
+            margin: 5px;
+        }
+
+        .top-buttons {
+            justify-content: space-between;
+            /* Add some padding to the top buttons area */
+        }
+
+        .container {
+            background-color: azure;
+            padding: 10px;
+            overflow-y: auto;
+            border-radius: 20px;
+            /* Enable scrolling in the main content area */
+        }
+
+        .form-container {
+            background-color: azure;
+            padding: 10px;
+            border-radius: 8px;
+            display: grid;
+            /* Use grid for the form */
+            grid-template-columns: 1fr;
+            /* Single column layout */
+            gap: 15px;
+            /* Spacing between form elements */
+        }
+
+
+        .basic-input-container {
+            display: flex;
+            align-items: start;
+            padding: 20px;
+            gap: 20px;
+            margin-bottom: 15px;
+            /* Consistent spacing between all form groups */
+        }
+
+        .basic-input-container label {
+            text-align: center;
+            width: 200px;
+            /* Or a specific width if needed */
+            flex-shrink: 0;
+            /* Prevent label from shrinking */
+        }
+
+        .form-group {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            margin-bottom: 15px;
+            justify-content: space-between;
+
+            /* Consistent spacing between all form groups */
+        }
+
+        .form-group label {
+            width: 150px;
+            /* Or a specific width if needed */
+            flex-shrink: 0;
+            /* Prevent label from shrinking */
+        }
+
+        /* Target ALL form elements within a form-group */
+        .basic-input-container,
+        .form-group input,
+        .form-group textarea,
+        .form-group select,
+        .form-group input[type="date"],
+        /* Date field */
+        .form-group input[type="number"],
+        /* Integer/Number field */
+        .form-group input[type="file"],
+        /* File field */
+        .form-group input[type="text"],
+        /* String/Text field */
+        .form-group input[type="url"],
+        /* URL field */
+        .form-group input[type="radio"],
+        /* Radio button */
+        .form-group input[type="checkbox"] {
+            /* Checkbox */
+            flex-grow: 1;
+            /* Allow input to expand */
+            width: 65%;
+            /* Important for textareas and other inputs */
+            /* Include padding and border in width */
+        }
+
+        /* Special Case: Radio Buttons and Checkboxes */
+        .form-group input[type="radio"],
+        .form-group input[type="checkbox"] {
+            flex-grow: 0;
+            /* Don't let radio buttons/checkboxes expand */
+            width: auto;
+            /* Let them take their natural width */
+            margin-right: 5px;
+            /* Add some space to the right of the input */
+        }
+
+        /* Optional: Style error messages or hints */
+        .form-group .error-message,
+        /* Example class for error messages */
+        .form-group .hint {
+            /* Example class for hints */
+            font-size: smaller;
+            color: gray;
+            margin-top: 5px;
+        }
+
+        /* Optional: Add some margin to the bottom of form groups for spacing */
+        .form-group {
+            margin-bottom: 10px;
+            /* Adjust as needed */
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+        .top-buttons a {
+            padding: 8px 16px;
+            background-color: aqua;
+            text-decoration: none;
+            color: black;
+            font-size: 17px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        /* Platform Sub-fields Styling */
+
+
+        .platform-fields {
+            display: inline;
+            /* Take the fields out of the document flow */
+            top: 0;
+            left: 0;
+            width: 80%;
+            /* Ensure they cover the container */
+            /* Add any other styles you need for the platform fields */
+        }
+
+        .platform-fields {
+            display: flex;
+
+        }
+
+        /* Platform Sub-fields Styling (Absolute Positioning) */
+        #platform-subfields {
+            display: flex;
+            margin: 10px;
+            /* Add space below platform subfields */
+        }
+
+        /* Ensure consistent spacing between elements */
+        #trend-display-options {
+            margin-top: 10px;
+            /* Add space above options */
+            /* Add margin to push it below platform subfields */
+            margin-bottom: 20px;
+            /* Space below trend display options */
+        }
+
+        .submit-btn {
+            color: aqua;
+            margin: 10px;
+            display: flex;
+            border-radius: 25px;
+            /* Use flexbox for button alignment */
+            justify-content: space-between;
+            gap: 100px;
+            ;
+            /* Center the buttons */
+        }
+
+        .btn-primary {
+            color: black;
+            background-color: aqua;
+            display: flex;
+            border-radius: 25px;
+            /* Use flexbox for button alignment */
+            justify-content: space-between;
+            gap: 100px;
+            ;
+            /* Center the buttons */
+        }
+
+        /* Platform Sub-fields Styling */
+    </style>
+</head>
+
+<body>
+
+    <div class="top-buttons">
+        <a href="{{ url_for('main.sentimentanalysis') }}">Back to Sentiment Analysis</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align: center; margin-bottom: 20px;">Trend Analysis</h3>
+
+
+        <details style="margin: 20px 0; background-color: #f8f9fa; padding: 15px; border-radius: 6px; border: 1px solid #ddd;">
+            <summary style="font-weight: bold; font-size: 16px; color: #0d6efd; cursor: pointer;">
+              📘 Input Format Instructions (Click to expand)
+            </summary>
+            <ul style="margin-top: 10px; font-size: 14px; line-height: 1.6;">
+              <li>🗂 <strong>Multiple Files</strong>: Each file is treated as one time group. No timestamps needed inside files.</li>
+              <li>📄 <strong>Single File</strong>: Must include <code>YYYY-MM-DD</code> (e.g., <code>2025-02-01</code>) at the start of sections. If not, the entire file is treated as one group.</li>
+              <li>📝 <strong>Large Text</strong>: Split sections using timestamps in <code>YYYY-MM-DD</code> format.</li>
+              <li>💬 <strong>Chat Messages</strong>: Timestamps are handled automatically. No user action needed.</li>
+              <li>⚠️ <strong>Fallback Notice</strong>: If no valid timestamps are detected, a warning will show and results will be grouped as a single time period.</li>
+            </ul>
+          </details>
+          
+        <form method="POST" action="{{ url_for('main.trend_analysis') }}" class="form-container"
+            enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <div class="basic-input-container">
+                <div class="analysis_-ype-field">
+                    <label>{{ form.trend_analysis_type.label }}</label>
+                    {{ form.trend_analysis_type(class="form-control") }}
+                </div>
+
+                <div class="start-date-field">
+                    <label>{{ form.start_date.label }}</label>
+                    {{ form.start_date(class="form-control") }}
+                </div>
+
+                <div class="end-date-field">
+                    <label>{{ form.end_date.label }}</label>
+                    {{ form.end_date(class="form-control") }}
+                </div>
+
+                <div class="time-scale-field">
+                    <label>{{ form.trend_time_scale.label }}</label>
+                    {{ form.trend_time_scale(class="form-control") }}
+                </div>
+                <div class="trend-mode-field">
+                    <label>{{ form.trend_analysis_mode.label }}</label>
+                    {{ form.trend_analysis_mode(class="form-control") }}
+                </div>
+            </div>
+            <div class="form-group" id="user-id-field">
+                <label>{{ form.user_id.label }}</label>
+                {{ form.user_id(class="form-control") }}
+            </div>
+
+            <div class="form-group" id="session-id-field">
+                <label>{{ form.session_id.label }}</label>
+                {{ form.session_id(class="form-control") }}
+            </div>
+            <div class="form-group" id="aspect-field">
+                <label>{{ form.aspect.label }}</label>
+                {{ form.aspect(class="form-control") }}
+            </div>
+
+            <div id="file-fields" class="file_data-fields">
+                <div class="form-group">
+                    {{ form.file_upload.label(class="form-label") }}
+                    {{ form.file_upload(class="form-control") }}
+                </div>
+            </div>
+            <div id="file-fields" class="file_data-fields">
+                <div class="form-group">
+                    {{ form.large_text.label(class="form-label") }}
+                    {{ form.large_text(class="form-control") }}
+                </div>
+            </div>
+
+            <div class="form-group" id="platform-section">
+                <label>{{ form.platform.label }}</label>
+                {{ form.platform(class="form-control") }}
+            </div>
+
+
+            <div id="platform-subfields">
+                <div id="twitter-fields" class="platform-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>{{ form.twitter_handle.label }}</label>
+                        {{ form.twitter_handle(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.twitter_url.label }}</label>
+                        {{ form.twitter_url(class="form-control") }}
+                    </div>
+                </div>
+
+                <div id="facebook-fields" class="platform-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>{{ form.facebook_page.label }}</label>
+                        {{ form.facebook_page(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.facebook_post.label }}</label>
+                        {{ form.facebook_post(class="form-control") }}
+                    </div>
+                </div>
+
+                <div id="youtube-fields" class="platform-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>{{ form.youtube_channel.label }}</label>
+                        {{ form.youtube_channel(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.youtube_video.label }}</label>
+                        {{ form.youtube_video(class="form-control") }}
+                    </div>
+                </div>
+
+                <div id="instagram-fields" class="platform-fields" style="display: none;">
+                    <div class="form-group">
+                        <label>{{ form.instagram_account.label }}</label>
+                        {{ form.instagram_account(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        <label>{{ form.instagram_post.label }}</label>
+                        {{ form.instagram_post(class="form-control") }}
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div id="trend-display-options" class="form-group">
+                <label>{{ form.trend_display_options.label }}</label>
+                {{ form.trend_display_options(class="form-control") }}
+            </div>
+
+            <div class="submit-btn" style="margin-top: 20px; display: flex; justify-content: center;">
+                <button type="submit" name="analysis_type" value="sentiment" class="btn btn-primary">Submit </button>
+               
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Function to handle showing/hiding fields based on analysis mode and analysis type
+            function toggleFields() {
+                const trend_analysis_type = $('#trend_analysis_type').val();  // Get selected value from select dropdown
+                console.log("Selected Analysis Type: " + trend_analysis_type); // Debugging
+
+                // Handle 'chat_messages' mode by hiding platform-related fields and user/session fields
+                if (trend_analysis_type === 'chat_messages') {
+                    console.log("Hiding platform section and user/session fields for 'chat_messages'");
+
+                    // Hide user_id and session_id fields
+                    $('#user_id').parent().show();
+                    $('#session_id').parent().show();
+
+                    // Hide platform section
+                    $('#platform-section').hide();
+                }
+                // Handle 'generic' or other modes
+                else if (trend_analysis_type === 'generic') {
+                    console.log("Showing platform section for 'generic'");
+
+                    // Show user_id and session_id fields
+                    $('#user_id').parent().hide();
+                    $('#session_id').parent().hide();
+
+                    // Show platform section
+                    $('#platform-section').show();
+                }
+
+                else if (trend_analysis_type === 'aspect_based') {
+                    console.log("Showing platform section for 'generic'");
+
+                    // Show user_id and session_id fields
+                    $('#user_id').parent().hide();
+                    $('#session_id').parent().hide();
+
+                    // Show platform section
+                    $('#platform-section').show();
+                }
+            }
+
+            // Function to handle the platform subfields visibility based on selected platform
+            function togglePlatformSubfields() {
+                const platform = $('input[name="platform"]:checked').val();
+
+                $('.platform-fields').hide(); // Hide all
+
+                if (platform) {
+                    $(`#${platform}-fields`).show();
+                }
+
+                // Adjust margin based on visible platform fields
+                const visibleFields = $('.platform-fields:visible');
+                if (visibleFields.length > 0) {
+                    $('#trend-display-options').css('margin-top', '20px'); // Add margin only if platform fields are visible
+                } else {
+                    $('#trend-display-options').css('margin-top', '0'); // Remove margin if no platform fields are visible
+                }
+            }
+
+            // Initialize visibility on page load
+            toggleFields(); // Force initialization on page load
+            togglePlatformSubfields(); // Initialize platform-specific fields visibility
+
+            // Event listeners for changes in analysis mode (trend_analysis_type), platform, etc.
+            $('select[name="trend_analysis_type"]').on('change', function () {
+                toggleFields(); // Update visibility based on analysis mode (chat_messages, generic, etc.)
+            });
+
+            $('input[name="platform"]').on('change', function () {
+                togglePlatformSubfields(); // Update platform-specific fields visibility when a platform is selected
+            });
+        });
+
+
+
+    </script>
+
+    <script>
+        document.getElementById('file-upload').addEventListener('change', function (event) {
+            const fileNames = Array.from(event.target.files).map(file => file.name);
+            document.getElementById('file-names').textContent = fileNames.join(', ');
+        });
+    </script>
+
+
+
+</body>
+
+</html>

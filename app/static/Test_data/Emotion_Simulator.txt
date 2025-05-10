@@ -1,0 +1,51 @@
+delivery was good and the customer support works decently. People working in the shop could act more customer friendly.
+Installation of equipment performed as planned, however many errors have happened. 
+The software version has to be upgraded to include more sophisticated features.
+Troubleshooting has to be improved. Last week the response for hot TR’s was slow.
+Engineers who are responsible for maintenance are not satisfied with existing SLA. It has to be changed to make quick problem solving. 
+The product portfolio looks good, excited to see a presentation of the portfolio.
+My order is delayed and it makes me disappointed.
+I am happy that I received what I ordered in time.
+The presentation was okay, as expected.
+The shipment is done as planned.
+The implementation project is delayed, which puts us in a weak position compared to our competitors. 
+Can you please inform me about this as soon as possible?
+We had a face to face meeting which was better than Face-time meeting but it has to happen more often.
+Is everything fine?
+The flight was too long, but the service was good.
+Number of support engineers should be increased.
+The weather is wonderful.
+Let's take a long walk along the beach, it is sunny and nice weather. 
+It was raining the whole day, it was really boring!
+        "This is the worst experience I've ever had.",
+        "It's okay, nothing special.", 
+“I absolutely love this”
+        "I'm so happy with the results!",
+        "This product is disappointing.",
+        "What a pleasant surprise!",
+        "I feel so frustrated right now.",
+        "This made my day!",
+        "I can't believe how bad this turned out.",
+        "Wow, just amazing work!"
+        "Thank you very much, your summary is brilliant."
+        "Nice"
+        "Do you have the explanation on these subjects?"
+        "that Last part was a bit confusing"
+        "Merry Christmas 😨" 
+        "Ready for Full BOOM BAAM"
+        "Finally Varun take acting seriously.."
+        "This is the kind of movie we need for Christmas"
+        "At first, I was like 'hmm what could they share about her story to make it a whole film?' But the trailer humbled me"
+        "wow the actress playing Mary is breathtakingly beautiful!"
+        "Hail Mary, full of grace, the Lord is with thee; blessed art thou among women and blessed is the fruit of thy womb, Jesus. Holy Mary, Mother of God, pray for us sinners, now and at the hour of our death. Amen."
+        "FINALLY a movie featuring the TRUE meaning of Merry Christmas!!🌷🙏✝️"
+        "Am I the only one who thinks this seems off? The fact that the quote “All things are possible with God,” was shortened to “all things are possible,” just doesn’t sit right with me."
+        "Looks wonderful. The only question now is... how will Netflix screw it up?"
+        "The actress is really pretty"
+        "Reading Schopenhauer is truly one of life’s joys because it reflects so honestly about life’s pain. One of the great intellects in history!"
+        "The safest way of not being very miserable is not to expect to be very happy."
+        "Be at peace with yourself . Love yourself and others .  Inner peace ! Inner peace ! "
+        "Prices wd be helpful"
+        "I live in South Africa where can i buy your gargets?"
+        "Sorry didn’t see them"        
+        "Why r u upset with Siri ? 😂🙈"

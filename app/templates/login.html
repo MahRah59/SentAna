@@ -1,0 +1,74 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles1.css') }}">
+
+    <title>Login </title>
+
+    <style>
+        body {
+            background-color: powderblue;
+            padding: 20px;
+            margin: 30px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--
+    <body class="login-page">
+    <div class="form-container">
+        <form action="{{ url_for('main.login') }}" method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password">
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+-->
+
+
+
+
+
+    <body class="login-page">
+        <div class="form-container">
+            <h3 style="text-align: center; margin-top: 10px; padding:20px;">Login to SentAna </h3>
+
+            <form method="POST">
+                {{ form.hidden_tag() }} <!-- This includes the CSRF token -->
+
+                <div class="form-group">
+                    {{ form.email.label }} {{ form.email(size=32) }} <!-- Example for email field -->
+
+                    <br>
+                    <br>
+                </div>
+                <div class="form-group">
+                    {{ form.password.label }} {{ form.password(size=32) }} <!-- Example for password field -->
+                    <br>
+                    <br>
+                </div>
+                <div class="form-group">
+                    {{ form.submit() }} <!-- Submit button -->
+                </div>
+            </form>
+            <p>Don't have an account? <a href="{{ url_for('main.register') }}">Register here</a></p>
+        </div>

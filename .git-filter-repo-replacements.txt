@@ -1,0 +1,10 @@
+app/venv
+new_venv_3_10
+logs
+*.db
+*.pdf
+*.numbers
+*.pkl
+*.mp4
+instance
+Test_Data

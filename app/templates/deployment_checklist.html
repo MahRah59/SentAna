@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>🚀 Deployment Prep Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+            color: #2c3e50;
+        }
+
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
+
+        ul {
+            list-style-type: "✔ ";
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .top-button-bar{
+            border-radius: 10px;
+            margin:20px;
+            float:right;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 10px 20px;
+            font-size: 18px;
+            font-weight: bolder;
+        }
+
+    
+    </style>
+</head>
+
+<body>
+    <h2 style="text-align: center; margin-top: 5px;background-color: aqua; margin:20px;"> deployment Checklist </h2>
+
+
+    <div class="top-button-bar"style="text-align: center; ">
+            <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+
+    </div>
+
+
+    <div class="section">
+        <h2>1. Code & Functionality</h2>
+        <ul>
+            <li>All routes respond correctly (sentiment, emotion, trend, chatbot)</li>
+            <li>No broken links, form errors, or console warnings</li>
+            <li>Transformer and VADER modes switch correctly</li>
+            <li>ABSA and Emotion detection fully functional</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>2. Input Handling</h2>
+        <ul>
+            <li>Supports text, file, large text, mock, social media inputs</li>
+            <li>Validations for file types, text length, and required fields</li>
+            <li>Time scale and aspect extraction handled gracefully</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>3. Model Integration</h2>
+        <ul>
+            <li>All models load successfully (VADER, Transformers, Emotion)</li>
+            <li>Token limits, chunking, and error handling in place</li>
+            <li>Language detection and translation work as expected</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>4. Visualization</h2>
+        <ul>
+            <li>Pie, radar, bar charts display correctly</li>
+            <li>Star-score color scheme is consistent</li>
+            <li>Fallback text appears when data is missing</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>5. User Interface & UX</h2>
+        <ul>
+            <li>Mobile responsive layout</li>
+            <li>Clear labels, tooltips, and help texts</li>
+            <li>Animations or transitions enhance user experience</li>
+            <li>Intro video embedded and works properly</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>6. File & Data Storage</h2>
+        <ul>
+            <li>No unnecessary saving of uploaded files</li>
+            <li>Database correctly stores sessions, messages, and analysis results</li>
+            <li>Test data cleaned or flagged for deletion</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>7. Security & Config</h2>
+        <ul>
+            <li>Password hashing with bcrypt</li>
+            <li>Flask secret key and config variables secured</li>
+            <li>Debug mode disabled</li>
+            <li>Input sanitized for injection or file exploits</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>8. Deployment Platform</h2>
+        <ul>
+            <li>Dependencies listed in requirements.txt</li>
+            <li>Deployment scripts (e.g., Procfile, Dockerfile) ready</li>
+            <li>Using Gunicorn or similar WSGI server</li>
+            <li>HTTPS and CORS settings verified</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>9. Logging & Monitoring</h2>
+        <ul>
+            <li>TimedRotatingFileHandler set up for daily logs</li>
+            <li>Error logs saved and accessible</li>
+            <li>Optionally, escalation trigger alerts are working</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>10. Documentation & Help</h2>
+        <ul>
+            <li>“How it works” or Help section added</li>
+            <li>User instructions for all input types</li>
+            <li>Presentation video integrated</li>
+            <li>Final testing with realistic scenarios completed</li>
+        </ul>
+    </div>
+
+</body>
+
+</html>

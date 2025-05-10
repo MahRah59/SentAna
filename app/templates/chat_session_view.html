@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Session {{ session_id }}</title>
+</head>
+<body>
+
+    <h3>💬 Chat Session: {{ session_id }}</h3>
+<hr>
+<ul>
+    {% for m in messages %}
+    <li>
+        <strong>{{ "User" if "user" in m.additional_info|lower else "Bot" }}:</strong>
+        {{ m.message }} <br>
+        <small>{{ m.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+    </li>
+    {% endfor %}
+</ul>
+
+<br><br> 
+
+<a href="{{ url_for('main.chat_summaries') }}">📊 View Chat Summaries</a>
+
+<br><br> 
+<a href="{{ url_for('main.intent_classification') }}" class="back-to-chatbot">💬 Back to Chatbot</a>
+</body>
+</html>

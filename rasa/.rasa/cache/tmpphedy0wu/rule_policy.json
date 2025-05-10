@@ -1,0 +1,31 @@
+{
+  "lookup": {
+    "rules": {
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_about_all_products\"}}]": "action_show_product_info",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_about_all_products\"}}, {\"prev_action\": {\"action_name\": \"action_show_product_info\"}, \"user\": {\"intent\": \"ask_about_all_products\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"track_order_status\"}}]": "action_track_order",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"track_order_status\"}}, {\"prev_action\": {\"action_name\": \"action_track_order\"}, \"user\": {\"intent\": \"track_order_status\"}}]": "utter_ask_anything_else",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"track_order_status\"}}, {\"prev_action\": {\"action_name\": \"action_track_order\"}, \"user\": {\"intent\": \"track_order_status\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_anything_else\"}, \"user\": {\"intent\": \"track_order_status\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"goodbye\"}}]": "utter_goodbye",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"goodbye\"}}, {\"prev_action\": {\"action_name\": \"utter_goodbye\"}, \"user\": {\"intent\": \"goodbye\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greet\"}}]": "utter_greet",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"greet\"}}, {\"prev_action\": {\"action_name\": \"utter_greet\"}, \"user\": {\"intent\": \"greet\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"thank_you\"}}]": "utter_happy",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"thank_you\"}}, {\"prev_action\": {\"action_name\": \"utter_happy\"}, \"user\": {\"intent\": \"thank_you\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_services_available\"}}]": "action_show_services",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_services_available\"}}, {\"prev_action\": {\"action_name\": \"action_show_services\"}, \"user\": {\"intent\": \"ask_services_available\"}}]": "utter_ask_anything_else",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_services_available\"}}, {\"prev_action\": {\"action_name\": \"action_show_services\"}, \"user\": {\"intent\": \"ask_services_available\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_anything_else\"}, \"user\": {\"intent\": \"ask_services_available\"}}]": "action_listen",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_product_info\"}}]": "action_show_product_info",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_product_info\"}}, {\"prev_action\": {\"action_name\": \"action_show_product_info\"}, \"user\": {\"intent\": \"ask_product_info\"}}]": "utter_ask_anything_else",
+      "[{\"prev_action\": {\"action_name\": \"action_listen\"}, \"user\": {\"intent\": \"ask_product_info\"}}, {\"prev_action\": {\"action_name\": \"action_show_product_info\"}, \"user\": {\"intent\": \"ask_product_info\"}}, {\"prev_action\": {\"action_name\": \"utter_ask_anything_else\"}, \"user\": {\"intent\": \"ask_product_info\"}}]": "action_listen"
+    },
+    "rule_only_slots": [],
+    "rule_only_loops": [],
+    "rules_for_loop_unhappy_path": {},
+    "rules_not_in_stories": [
+      "predicting default action with intent session_start",
+      "predicting default action with intent restart",
+      "predicting default action with intent back"
+    ]
+  }
+}

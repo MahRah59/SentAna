@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://127.0.0.1:5002/sentimentan_alysis -->
+<html lang="en"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="ImVlM2VjZTkwNDVkMDc1OWQ4ZjE2ZjFkMWM4NTNhYTIwN2MwNjNjNGQi.aA-iKQ.8t8uiak9OT1RpMKPqTFCXAy-DZA">
+
+
+    <title>Sentiment Analysis</title>
+
+    <script src="./Sentiment Analysis_files/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            background-color: powderblue;
+        }
+
+        .container {
+            font-size: small;
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        #advanced-analysis-fields {
+            display: inline-block;
+            font-size: 15px;
+            width: 65%;
+            vertical-align: top;
+        }
+
+
+        #aspect-based-fields {
+            font-size: 15px;
+            /* Increase the font size */
+            width: 65%;
+            /* Adjust the width of the container */
+        }
+
+        #aspect_input {
+            font-size: 15px;
+            /* Increase the font size of the input itself */
+            width: 60%;
+            /* Make the input field span the full width of the container */
+            padding: 10px;
+            /* Add some padding for a larger field */
+        }
+
+
+
+        #sentiment-trend-analysis-options {
+            background-color: aqua;
+            display: inline-block;
+            width: 65%;
+            vertical-align: top;
+            font-size: medium;
+        }
+
+        .trendAnalysisHead {
+            font-size: 30px;
+            color: blue;
+            font-weight: bold;
+
+        }
+
+
+        #platform-subfields {
+            background-color: lightgrey;
+            font-size: smaller;
+        }
+
+
+
+        .pasted_article_text {
+            width: 40vw;
+
+        }
+
+        #chatbot-message-section {
+            background-color: bisque;
+            font-size: smaller;
+
+        }
+
+        #intent-classification-fields {
+            background-color: bisque;
+            font-size: smaller;
+            display: inline-block;
+            width: 30%;
+            vertical-align: top;
+            margin-left: 30px;
+        }
+
+        #chatbot-message-section {
+            font-size: smaller;
+            margin-top: 10px;
+            display: inline-block;
+
+        }
+
+        #chatbot-message-section {
+            font-size: large;
+            margin-top: 10px;
+            display: inline-block;
+
+        }
+
+
+        .button-container {
+            background-color: red;
+
+        }
+
+        .pass-button p {
+            float: right;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-style: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .logout-button p {
+            float: right;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-style: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        
+
+        /* Apply animation to button */
+        #start-chat {
+            animation: pulse 2s infinite;
+            border-radius: 30px;
+            padding: 15px 30px;
+            font-size: 20px;
+        }
+
+
+        .CRM-buttons {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body __processed_15dcedc9-b0d0-4161-a3c4-d3a1d596b658__="true">
+
+    <div class="logout-button">
+        <p><a href="http://127.0.0.1:5002/logout">Logout</a></p>
+    </div>
+
+    <div class="pass-button">
+        <p><a href="http://127.0.0.1:5002/change_password"> Change Your Password </a></p>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="http://127.0.0.1:5002/create_CRM_contact">Create CRM Contact</a>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="http://127.0.0.1:5002/create_CRM_deal">Create CRM Deal</a>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="http://127.0.0.1:5002/hubspot_contacts">Download CRM Contacts</a>
+    </div>
+
+
+    <input type="text" id="original-word" placeholder="Enter slang word">
+    <input type="text" id="replacement-word" placeholder="Enter replacement">
+    <button id="add-slang-button">Add Custom Slang</button>
+
+
+    <div style="text-align: center; margin-top: 50px;">
+        <button id="start-chat" class="btn btn-primary">💬 Chat</button>
+    </div>
+
+    <div class="container">
+        <h1 style="text-align: center; margin-top: 5px;">Sentiment Analysis </h1>
+
+        <form method="POST" action="http://127.0.0.1:5002/sentimentan_alysis" enctype="multipart/form-data">
+            
+
+            <!-- Analysis Mode -->
+            <div>
+                <label><label for="analysis_mode">Analysis Mode</label></label>
+                <ul class="form-check-input" id="analysis_mode"><li><input checked="" id="analysis_mode-0" name="analysis_mode" required="" type="radio" value="basic"> <label for="analysis_mode-0">Basic Analysis</label></li><li><input id="analysis_mode-1" name="analysis_mode" required="" type="radio" value="advanced"> <label for="analysis_mode-1">Advanced Analysis</label></li></ul>
+            </div>
+
+            <!-- Platform Selection -->
+            <div id="platform-section" style="">
+                <label><label for="platform">Social Media Platform</label></label>
+                <ul class="form-check-input" id="platform"><li><input id="platform-0" name="platform" required="" type="radio" value="internet_articles"> <label for="platform-0">Internet Articles</label></li><li><input id="platform-1" name="platform" required="" type="radio" value="file"> <label for="platform-1">File/Dataset</label></li><li><input id="platform-2" name="platform" required="" type="radio" value="twitter"> <label for="platform-2">Twitter/X</label></li><li><input id="platform-3" name="platform" required="" type="radio" value="youtube"> <label for="platform-3">YouTube</label></li><li><input id="platform-4" name="platform" required="" type="radio" value="facebook"> <label for="platform-4">Facebook</label></li><li><input id="platform-5" name="platform" required="" type="radio" value="instagram"> <label for="platform-5">Instagram</label></li></ul>
+            </div>
+
+            <!-- Platform Sub-fields -->
+            <div id="platform-subfields">
+
+
+                <!-- Internet Article -->
+                <div id="internet-article-fields" class="platform-fields" style="display: none;">
+
+                    <label><label for="company_name">Company Name</label></label>
+                    <input class="form-control" id="company_name" name="company_name" type="text" value="">
+
+                    <label><label for="preferred_sources">Preferred Sources (URLs, one per line)</label></label>
+                    <textarea class="form-control" id="preferred_sources" name="preferred_sources"></textarea>
+
+                    <label><label for="keywords">Keywords</label></label>
+                    <input class="form-control" id="keywords" name="keywords" type="text" value="">
+
+
+                    <label><label for="exclusion_criteria">Exclude Words/URLs (optional)</label></label>
+                    <textarea class="form-control" id="exclusion_criteria" name="exclusion_criteria"></textarea>
+
+                    <label><label for="time_filter">Time Range</label></label>
+                    <select class="form-control" id="time_filter" name="time_filter"><option value="any">Any Time</option><option value="24h">Last 24 Hours</option><option value="7d">Last 7 Days</option><option value="30d">Last 30 Days</option></select>
+
+                    <label><label for="trend_time_scale">Trend Time Scale</label></label>
+                    <select class="form-control" id="trend_time_scale" name="trend_time_scale"><option value="none">None</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
+
+                    <br><br>
+
+                    <div class="form-group">
+                        <label for="pasted_article_text">Paste Article Text (optional)</label>
+                        <textarea class="form-control" id="pasted_article_text" name="pasted_article_text" rows="6" placeholder="Paste full article content here if not using a URL..."></textarea>
+                    </div>
+                </div>
+
+
+                <!-- File/Dataset -->
+                <div id="file-fields" class="platform-fields" style="display: none;">
+                    <label><label for="file_upload">Upload Dataset (CSV or TXT)</label></label>
+                    <input class="form-control" id="file_upload" name="file_upload" type="file">
+
+                    <label><label for="large_text">Paste Large Text Here</label></label>
+                    <textarea class="form-control" id="large_text" name="large_text"></textarea>
+
+                </div>
+                <!-- Twitter -->
+                <div id="twitter-fields" class="platform-fields" style="display: none;">
+
+                    <label><label for="twitter_handle">Twitter Handle or Hashtag</label></label>
+                    <input class="form-control" id="twitter_handle" name="twitter_handle" type="text" value="">
+
+
+                    <label><label for="twitter_url">Tweet URL</label></label>
+                    <input class="form-control" id="twitter_url" name="twitter_url" type="url" value="">
+
+
+                </div>
+
+                <!-- YouTube -->
+                <div id="youtube-fields" class="platform-fields" style="display: none;">
+
+
+                    <label><label for="youtube_channel">YouTube Channel Name</label></label>
+                    <input class="form-control" id="youtube_channel" name="youtube_channel" type="text" value="">
+
+                    <label><label for="youtube_video">YouTube Video URL</label></label>
+                    <input class="form-control" id="youtube_video" name="youtube_video" type="url" value="">
+
+
+                    <label><label for="youtube_Mock_channel">YouTube Mock Channel </label></label>
+                    <input class="form-control" id="youtube_Mock_channel" name="youtube_Mock_channel" type="text" value="">
+
+
+                </div>
+
+                <!-- Facebook -->
+                <div id="facebook-fields" class="platform-fields" style="display: none;">
+
+
+                    <label><label for="facebook_page">Facebook Page Name</label></label>
+                    <input class="form-control" id="facebook_page" name="facebook_page" type="text" value="">
+
+                    <label><label for="facebook_post">Facebook Post URL</label></label>
+                    <input class="form-control" id="facebook_post" name="facebook_post" type="url" value="">
+                </div>
+
+                <!-- Instagram -->
+                <div id="instagram-fields" class="platform-fields" style="display: none;">
+
+
+                    <label><label for="instagram_account">Instagram Username</label></label>
+                    <input class="form-control" id="instagram_account" name="instagram_account" type="text" value="">
+
+                    <label><label for="instagram_post">Instagram Post URL</label></label>
+                    <input class="form-control" id="instagram_post" name="instagram_post" type="url" value="">
+                </div>
+
+
+
+                <!-- Platform Sub-fields -->
+                <div id="platform-subfields" style="font-size: small; color:blueviolet; font-weight: bold;">
+                    <label>
+                        <input type="checkbox" id="raw-text-checkbox"> Process as raw text
+                    </label>
+                    <label>
+                        <input type="checkbox" id="mock-data-checkbox" name="mock_data_checkbox"> Process if Mock Data
+                    </label>
+                    <label>
+                        <input type="checkbox" id="absa-emotion-checkbox" name="absa_emotion_checkbox"> Process if ABSA
+                        Emotion
+                    </label>
+                </div>
+            </div>
+            <br>
+
+            <!-- Basic Analysis Fields -->
+            <div id="basic-analysis-fields" style="">
+                <label><label for="basic_analysis_type">Select Analysis Type</label></label>
+                <ul class="form-check-input" id="basic_analysis_type"><li><input id="basic_analysis_type-0" name="basic_analysis_type" type="radio" value="vader"> <label for="basic_analysis_type-0">VADER (Rule-Based)</label></li><li><input id="basic_analysis_type-1" name="basic_analysis_type" type="radio" value="transformer"> <label for="basic_analysis_type-1">Transformer (Deep Learning-Based)</label></li></ul>
+
+                <label><label for="basic_display_options">Select Display Option</label></label>
+                <ul class="form-check-input" id="basic_display_options"><li><input checked="" id="basic_display_options-0" name="basic_display_options" type="radio" value="text"> <label for="basic_display_options-0">Text</label></li><li><input id="basic_display_options-1" name="basic_display_options" type="radio" value="pie_chart"> <label for="basic_display_options-1">Pie Chart</label></li><li><input id="basic_display_options-2" name="basic_display_options" type="radio" value="gauge"> <label for="basic_display_options-2">Gauge</label></li><li><input id="basic_display_options-3" name="basic_display_options" type="radio" value="word_cloud"> <label for="basic_display_options-3">Word Cloud</label></li><li><input id="basic_display_options-4" name="basic_display_options" type="radio" value="all"> <label for="basic_display_options-4">Show All</label></li><li><input id="basic_display_options-5" name="basic_display_options" type="radio" value="Table_form"> <label for="basic_display_options-5">Table Form: Only valid for Mock data analysis</label></li></ul>
+            </div>
+
+            <!-- Advanced Analysis Section -->
+            <div style="display: flexbox;">
+                <!-- Advanced Analysis Fields -->
+                <div id="advanced-analysis-fields" style="display: none;">
+                    <!-- Render "Select Analysis Type" only once -->
+                    <label><label for="advanced_analysis_type">Select Analysis Type</label></label>
+                    <ul class="form-check-input" id="advanced_analysis_type"><li><input id="advanced_analysis_type-0" name="advanced_analysis_type" type="radio" value="emotion_detection"> <label for="advanced_analysis_type-0">Emotion Detection</label></li><li><input id="advanced_analysis_type-1" name="advanced_analysis_type" type="radio" value="intent_classification"> <label for="advanced_analysis_type-1">Intent Classification</label></li><li><input id="advanced_analysis_type-2" name="advanced_analysis_type" type="radio" value="trend_analysis"> <label for="advanced_analysis_type-2">Sentiment Trend Analysis</label></li><li><input id="advanced_analysis_type-3" name="advanced_analysis_type" type="radio" value="absa"> <label for="advanced_analysis_type-3">Aspect-Based Sentiment Analysis</label></li><li><input id="advanced_analysis_type-4" name="advanced_analysis_type" type="radio" value="multilingual"> <label for="advanced_analysis_type-4">Multilingual Sentiment Analysis</label></li></ul>
+                    <!-- Rendering "Advanced Analysis Type" once -->
+                </div>
+            </div>
+
+            <!-- Aspect Based Input -->
+            <div id="aspect-based-fields" style="display: none;">
+                <label>Aspect Based Input</label>
+                <input class="form-check-input" id="aspect_input" name="aspect_input" placeholder="Enter Aspect(s) to Analyze: e.g., battery life, screen quality, etc." type="text" value="">
+            </div>
+
+            <!-- Intent Classification Section -->
+            <div id="intent-classification-fields" style="display: none;">
+                <label>Intent Classification Method</label>
+                <ul class="form-check-input" id="intent_classification_type"><li><input id="intent_classification_type-0" name="intent_classification_type" type="radio" value="rasa"> <label for="intent_classification_type-0">Rasa Chatbot</label></li><li><input id="intent_classification_type-1" name="intent_classification_type" type="radio" value="transformer_mode"> <label for="intent_classification_type-1">Transformer Model</label></li></ul>
+            </div>
+            <br>
+
+
+            <!-- Chatbot Message Section -->
+            <div id="chatbot-message-section" style="display: none;">
+                <br><br>
+                <label><label for="chatbot_message">Type a message to the chatbot:</label></label>
+                <textarea id="chat-input" class="form-control"></textarea>
+                <button id="send-chat" class="btn btn-primary">Send</button>
+                <button id="quit-chat" class="btn btn-danger">Quit Chat</button>
+                <button id="go-back" class="btn btn-secondary">Go Back to Sentiment Analysis</button>
+
+                <div id="chat-history" style="margin-top: 10px;">
+                    <p><strong>Chat History: (make CHAT HISTORY AS ITS OWN VIW)</strong></p>
+                    <div id="chat-content"></div>
+                </div>
+            </div>
+            <br><br>
+
+            <!-- Transformer Mode Section -->
+            <div id="transformer-mode-section" style="display: none;">
+                <label>Transformer Intent Prediction</label>
+                <textarea id="transformer-user-input" class="form-control" placeholder="Type your message here..."></textarea>
+                <button id="predict-intent" class="btn btn-success" style="margin-top: 10px;">Predict Intent</button>
+
+                <!-- Loading indicator -->
+                <div id="loading-indicator" style="display: none; margin-top: 10px;">
+                    <em>Loading...</em>
+                </div>
+                <div id="transformer-prediction-result" style="margin-top: 20px; display: none;">
+                    <p><strong>Predicted Intent:</strong> <span id="transformer-predicted-intent"></span></p>
+                    <p><strong>Example Response:</strong> <span id="transformer-example-response"></span></p>
+                </div>
+            </div>
+
+            <!-- Advanced Display Options -->
+            <div id="advanced-display-options" style="display: none;">
+                <label><label for="advanced_display_options">Select Display Options</label></label>
+                <ul class="form-check-input" id="advanced_display_options"><li><input checked="" id="advanced_display_options-0" name="advanced_display_options" type="radio" value="text_table"> <label for="advanced_display_options-0">Text and Table</label></li><li><input id="advanced_display_options-1" name="advanced_display_options" type="radio" value="bar_chart"> <label for="advanced_display_options-1">Bar Chart</label></li><li><input id="advanced_display_options-2" name="advanced_display_options" type="radio" value="radar_chart"> <label for="advanced_display_options-2">Radar Chart</label></li><li><input id="advanced_display_options-3" name="advanced_display_options" type="radio" value="word_cloud"> <label for="advanced_display_options-3">Word Cloud</label></li><li><input id="advanced_display_options-4" name="advanced_display_options" type="radio" value="show_all"> <label for="advanced_display_options-4">Show All</label></li></ul>
+            </div>
+
+    </form></div>
+
+    <!-- Submit Button and Go to Trend Analysis Button -->
+    <div id="button-container" style="display: flex; gap: 80px; margin-left: 80px;">
+        <!-- Submit Button -->
+        <div id="submission-button" style="">
+            <button type="submit" class="btn btn-primary"><label for="submit_analyze">Submit</label></button>
+        </div>
+
+        <!-- Go to Trend Analysis Button -->
+        <button type="button" class="btn btn-primary" id="go-to-trend-analysis">
+            Go to Trend Analysis
+        </button>
+    </div>
+
+
+
+    <script>
+        // Redirect to trend analysis page when the button is clicked
+        $("#go-to-trend-analysis").click(function () {
+            window.location.href = "/trend_analysis";
+        });
+    </script>
+
+
+    <script>
+        .then(data => {
+            document.getElementById('transformer-loading').style.display = 'none';
+
+            if (data.redirect_to_rasa) {
+                openRasaChatbot();  // (your function to open the Rasa Chatbot UI)
+            } else {
+                document.getElementById('transformer-predicted-intent').textContent = data.predicted_intent;
+                document.getElementById('transformer-example-response').textContent = data.example_response;
+                document.getElementById('transformer-prediction-result').style.display = 'block';
+            }
+        })
+    </script>
+
+
+    <script>
+
+        function showTransformerMode() {
+            document.getElementById('chatbot-message-section').style.display = 'none';
+            document.getElementById('transformer-mode-section').style.display = 'block';
+        }
+
+        function showChatbot() {
+            document.getElementById('transformer-mode-section').style.display = 'none';
+            document.getElementById('chatbot-message-section').style.display = 'block';
+        }
+
+    </script>
+
+
+
+    
+    
+
+    <script>
+
+        document.getElementById('predict-intent').addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const userInput = document.getElementById('transformer-user-input').value;
+
+            fetch('/predict_intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_input: userInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('transformer-predicted-intent').textContent = data.predicted_intent;
+                    document.getElementById('transformer-example-response').textContent = data.example_response;
+                    document.getElementById('transformer-prediction-result').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Function to handle showing/hiding fields based on analysis mode and analysis type
+            function toggleFields() {
+                const mode = $('input[name="analysis_mode"]:checked').val() || 'basic'; // Default to 'basic'
+                const selectedAnalysisType = $('input[name="advanced_analysis_type"]:checked').val();
+                const selectedIntentType = $('input[name="intent_classification_type"]:checked').val();
+
+                // Hide all fields initially
+                $('#basic-analysis-fields').hide();
+                $('#advanced-analysis-fields').hide();
+                $('#intent-classification-fields').hide();
+                $('#chatbot-message-section').hide();
+                $('#advanced-display-options').hide();
+                $('#submission-button').hide();
+                $('#start-trend-button').hide();
+                $('#platform-section').hide(); // Hide platform selection by default
+
+                // Handle Basic Mode
+                if (mode === 'basic') {
+                    $('#basic-analysis-fields').show();
+                    $('#submission-button').show(); // Show the Submit button for basic analysis
+                    $('#platform-section').show(); // Show platform selection
+                }
+
+                // Handle Advanced Mode
+                else if (mode === 'advanced') {
+                    $('#advanced-analysis-fields').show();
+                    $('#advanced-display-options').show(); // Show advanced display options
+
+                    // Sentiment Trend Analysis logic
+                    if (selectedAnalysisType === 'trend_analysis') {
+                        $('#advanced-display-options').hide(); // Hide display options for trend analysis
+                        $('#submission-button').show(); // Hide Submit button for trend analysis
+                        $('#start-trend-button').show(); // Show the "Start Trend Analysis" button
+                        $('#platform-section').show(); // Hide social media platform selection for trend analysis
+                    } else {
+                        $('#platform-section').show(); // Show platform selection for other analysis types
+                        $('#submission-button').show(); // Show Submit button for other analysis types
+                    }
+
+
+
+                    // Aspect Based  logic
+                    if (selectedAnalysisType === 'absa') {
+                        $('#advanced-display-options').show(); // Hide display options for trend analysis
+                        $('#submission-button').show(); // Hide Submit button for trend analysis
+                        $('#aspect-based-fields').show(); // Show the "Start Trend Analysis" button
+                        $('#platform-section').show(); // Hide social media platform selection for trend analysis
+                        $('#start-trend-button').hide(); // Show the "Start Trend Analysis" button
+
+                    } else {
+                        $('#platform-section').show(); // Show platform selection for other analysis types
+                        $('#submission-button').show(); // Show Submit button for other analysis types
+                    }
+
+                    // Intent Classification logic
+
+                    if (selectedAnalysisType === 'intent_classification') {
+                        window.location.href = "/intent_classification";
+                    }
+
+                    /***
+                    // Intent Classification logic
+                    if (selectedAnalysisType === 'intent_classification') {
+                        $('#intent-classification-fields').show();
+
+                        if (selectedIntentType === 'rasa') {
+                            $('#chatbot-message-section').show();
+                            $('#transformer-mode-section').hide();
+                            $('#platform-section').hide();
+                            $('.platform-fields').hide();
+                            $('#advanced-display-options').hide();
+                            $('#submission-button').hide();
+
+                        } else if (selectedIntentType === 'transformer_mode') {
+                            $('#chatbot-message-section').hide();
+                            $('#transformer-mode-section').show();
+                            $('#platform-section').hide();
+                            $('.platform-fields').hide();
+                            $('#advanced-display-options').hide();
+                            $('#submission-button').hide();
+
+                        } else {
+                            $('#chatbot-message-section').hide();
+                            $('#transformer-mode-section').hide();
+                            $('#platform-section').show();
+                            $('#advanced-display-options').show();
+                            $('#submission-button').show();
+                        }
+
+                    } else {
+                        $('#intent-classification-fields').hide();
+                        $('#chatbot-message-section').hide();
+                        $('#transformer-mode-section').hide();
+                    }
+                    ***/
+                }
+            }
+
+
+
+
+            // Function to handle the platform subfields
+            function togglePlatformSubfields() {
+                const platform = $('input[name="platform"]:checked').val();
+
+                // Hide all platform fields first
+                $('.platform-fields').hide();
+
+                // Show the correct platform-specific fields
+                if (platform === 'internet_articles') {
+                    $('#internet-article-fields').show();  // ✅ Ensure Internet Articles section is shown
+                } else if (platform) {
+                    $(`#${platform}-fields`).show(); // Show other platform-specific fields
+                }
+            }
+
+
+            // Event listener for chatbot message submission
+            $('#send-chat').on('click', function (e) {
+                e.preventDefault();  // Prevent default form submission
+
+                const userMessage = $('#chat-input').val().trim();
+                if (!userMessage) {
+                    alert('Please enter a message.');
+                    return;
+                }
+
+                // Append user message to chat content
+                $('#chat-content').append(`<p><strong>You:</strong> ${userMessage}</p>`);
+                $('#chat-input').val('');
+
+                // Retrieve CSRF token from meta tag
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                // Send AJAX request with CSRF token
+                $.ajax({
+                    url: '/chatbot',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ message: userMessage }),
+                    headers: {
+                        'X-CSRFToken': csrfToken, // Add CSRF token to headers
+                    },
+                    success: function (response) {
+                        console.log("Rasa response received:", response);
+                        if (response.message) {
+                            $('#chat-content').append(`<p><strong>Bot:</strong> ${response.message}</p>`);
+                        } else {
+                            $('#chat-content').append(`<p><strong>Bot:</strong> Sorry, no response received.</p>`);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        $('#chat-content').append(`<p><strong>Bot:</strong> An error occurred. Please try again later.</p>`);
+                    }
+                });
+            });
+
+            // Initialize visibility on page load
+            toggleFields(); // Force initialization on page load
+            togglePlatformSubfields(); // Initialize platform-specific fields visibility
+
+            // Event listeners for changes in analysis mode, analysis type, platform, etc.
+            $('input[name="analysis_mode"]').on('change', function () {
+                toggleFields(); // Update visibility based on analysis mode (basic/advanced)
+            });
+
+            $('input[name="advanced_analysis_type"]').on('change', function () {
+                toggleFields(); // Update visibility based on selected advanced analysis type
+            });
+
+            $('input[name="intent_classification_type"]').on('change', function () {
+                toggleFields(); // Update visibility based on selected intent classification type
+            });
+
+            $('input[name="platform"]').on('change', function () {
+                togglePlatformSubfields(); // Update platform-specific fields visibility
+            });
+
+            $('input[name="sentiment_trend_analysis_type"]').on('change', function () {
+                toggleSentimentTrendAnalysis(); // Update Sentiment Trend Analysis options visibility
+            });
+
+            // Handle Intent Classification type changes
+            $('input[name="intent_classification_type"]').on('change', function () {
+                toggleIntentClassificationFields(); // Update fields based on intent classification type
+            });
+
+            // Attach event listener to detect platform changes
+            $('input[name="platform"]').on('change', function () {
+                togglePlatformSubfields(); // Update visibility of platform-specific fields
+            });
+
+
+        });
+
+    </script>
+
+
+    <script>
+
+        document.getElementById('add-slang-button').addEventListener('click', function () {
+            let original = document.getElementById('original-word').value;
+            let replacement = document.getElementById('replacement-word').value;
+
+            fetch('/add_slang', {
+                method: 'POST',
+                body: JSON.stringify({ original: original, replacement: replacement }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+</body></html>

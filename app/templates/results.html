@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Platform-Specific Inputs (hidden or shown based on selected platform) -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+        }
+
+        .result-section p {
+            margin: 5px 0;
+        }
+
+
+        .charts,
+        .word-cloud {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .top-right-buttons {
+            float: right;
+            margin-top: 10px;
+            /* Adjust the margin as needed */
+            margin-left: 10px;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-right: 10px;
+            color: black;
+            font-size: 12px;
+            padding: 10px;
+            border: goldenrod;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: goldenrod;
+        }
+
+        select {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+
+        select:hover {
+            background-color: goldenrod;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #0073e6;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        a:hover {
+            background-color: #cc0000;
+        }
+
+
+        .results-flex-container {
+
+            display: flex;
+            align-items: flex-start;
+            /* Align items at the top */
+            gap: 20px;
+            /* Space between the table and comments list */
+            margin-top: 20px;
+            background-color: lightgray;
+        }
+
+        .emotion-score-table {
+            flex: 1;
+            /* The table takes up only necessary width */
+            max-width: 300px;
+            /* Optional: Limit the width of the table */
+            background-color: lightblue;
+
+        }
+
+        .comments-list {
+            flex: 2;
+            /* The comments list takes up the remaining space */
+            overflow: hidden;
+            /* Prevent overflow issues */
+        }
+
+        .bar-chart {
+            background-color: lightblue;
+        }
+
+        .radar-chart {
+            background-color: rgb(182, 219, 255);
+        }
+
+        .word-cloud-emotion {
+            background-color: lightpink;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th,
+        table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+
+
+        #comments-list,
+        #all-comments {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #comments-list li,
+        #all-comments li {
+            margin-bottom: 5px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+
+    <div class="top-right-buttons">
+        <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+        <button onclick="window.location.href='{{ url_for('main.logout') }}'">Logout</button>
+
+    </div>
+
+
+    <div class="download-btn">
+        <label for="file-format">Download as:</label>
+        <select id="file-format">
+            <option value="pdf">PDF</option>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+        </select>
+        <button id="download-button">Download</button>
+    </div>
+
+
+    <script>
+        document.getElementById('download-button').addEventListener('click', function () {
+            const format = document.getElementById('file-format').value;
+            if (format === 'csv') {
+                window.location.href = '/download/csv';
+            } else if (format === 'pdf') {
+                window.location.href = '/download/pdf';
+            } else if (format === 'json') {
+                window.location.href = '/download/json';
+            }
+        });
+    </script>
+
+
+
+
+    <div class="container">
+        {% if result_vader %}
+        <div class="result-section">
+            <h2>VADER-based Analysis</h2>
+            <p><strong>Positive:</strong> {{ result_vader.pos }}</p>
+            <p><strong>Negative:</strong> {{ result_vader.neg }}</p>
+            <p><strong>Neutral:</strong> {{ result_vader.neu }}</p>
+        </div>
+        {% endif %}
+
+        {% if result_transformer %}
+        <div class="result-section">
+            <h2>Transformer-based Analysis</h2>
+            <p><strong>Label:</strong> {{ result_transformer[0].label }}</p>
+            <p><strong>Confidence:</strong> {{ result_transformer[0].score }}</p>
+        </div>
+        {% endif %}
+
+
+        {% if article %}
+        <div class="article-meta">
+            <h3>{{ article.title or "Untitled Article" }}</h3>
+            <p><strong>Author:</strong> {{ article.author or "Unknown" }}</p>
+            <p><strong>Published on:</strong> {{ article.publish_date or "N/A" }}</p>
+            <p><strong>Source:</strong>
+                {% if article.source_url %}
+                <a href="{{ article.source_url }}" target="_blank">{{ article.source_url }}</a>
+                {% else %}
+                N/A
+                {% endif %}
+            </p>
+            <p><strong>Language Detected:</strong> {{ article.language or "Unknown" }}</p>
+        </div>
+        {% endif %}
+
+
+        {% if display_option %}
+        <h2>Selected Display Option: {{ display_option }}</h2>
+        {% endif %}
+
+        {% if display_option == 'word_cloud' or display_option == 'all' %}
+        <div class="word-cloud">
+            <h2>Word Cloud</h2>
+            {% if word_cloud_img %}
+            <img src="data:image/png;base64,{{ word_cloud_img }}" alt="Word Cloud">
+            {% endif %}
+        </div>
+        <hr style="margin: 40px 0; border: 1px solid lightgray;">
+        {% endif %}
+
+
+        {% if display_option == 'text' or display_option == 'all' %}
+        <div class="result-section" style="text-align: center;">
+            <h3>Sentiment Scores</h3>
+            {% if basic_analysis_type == 'vader' %}
+            <p style="color: green;"><strong>Positive:</strong> {{ sentiment.get('pos', 'N/A') }}</p>
+            <p style="color: gray;"><strong>Neutral:</strong> {{ sentiment.get('neu', 'N/A') }}</p>
+            <p style="color: red;"><strong>Negative:</strong> {{ sentiment.get('neg', 'N/A') }}</p>
+            <p><strong>Overall (Compound):</strong> {{ sentiment.get('compound', 'N/A') }}</p>
+            {% elif basic_analysis_type == 'transformer' %}
+            <p><strong>Predicted Label:</strong> {{ sentiment.get('predicted_label', 'N/A') }}</p>
+            <p><strong>Predicted Score:</strong> {{ "%.2f"|format(sentiment.get('predicted_score', 0)) }}</p>
+            <h4>All Scores:</h4>
+            <div style="display: inline-block; text-align: left;">
+                {% for label, score in sentiment.get('all_scores', {}).items() %}
+                <p>{{ label }}: {{ "%.2f"|format(score) }}</p>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No sentiment scores available.</p>
+            {% endif %}
+        </div>
+        <hr style="margin: 40px 0; border: 1px solid lightgray;">
+        {% endif %}
+
+
+
+        {% if display_option == 'pie_chart' or display_option == 'all' %}
+        <div class="charts">
+            <h2>Pie Chart</h2>
+            {% if pie_chart %}
+            <div>{{ pie_chart | safe }}</div>
+            {% else %}
+            <p>Pie chart data not found!</p>
+            {% endif %}
+        </div>
+        <hr style="margin: 40px 0; border: 1px solid lightgray;">
+        {% endif %}
+
+        {% if display_option == 'gauge' or display_option == 'all' %}
+        <div class="charts">
+            <h2>Gauge Chart</h2>
+            {% if gauge_chart %}
+            <div>{{ gauge_chart | safe }}</div>
+            {% else %}
+            <p>Gauge chart data not found!</p>
+            {% endif %}
+        </div>
+        <hr style="margin: 40px 0; border: 1px solid lightgray;">
+
+        {% endif %}
+
+
+        {% if display_option in ['text_table', 'bar_chart', 'radar_chart', 'word_cloud', 'show_all'] %}
+        <div class="result-section">
+            <h3>Emotion Detection Results</h3>
+
+            <div class="results-flex-container">
+                {% if display_option in ['text_table', 'show_all'] %}
+                <div class="comments-list">
+                    <h4>Comments</h4>
+                    <ul id="comments-list">
+                        {% for comment in emotion_results[:10] %}
+                        <li>{{ comment.comment }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% if emotion_results|length > 10 %}
+                    <button id="show-more">Show More</button>
+                    <button id="show-less" style="display:none;">Show Less</button>
+                    <ul id="all-comments" style="display:none;">
+                        {% for comment in emotion_results[10:] %}
+                        <li>{{ comment.comment }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <div class="emotion-score-table">
+                    <h4>Aggregated Emotion Scores</h4>
+                    <table>
+                        <tr>
+                            <th>Emotion</th>
+                            <th>Score</th>
+                        </tr>
+                        {% for emotion, score in aggregated_emotions.items() %}
+                        <tr>
+                            <td>{{ emotion }}</td>
+                            <td>{{ "%.2f"|format(score) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if display_option in ['bar_chart', 'show_all'] and bar_chart %}
+            <div class="charts">
+                <h3 style="text-align: center;">Bar Chart</h3>
+                <div>{{ bar_chart | safe }}</div>
+            </div>
+            <hr style="margin: 40px 0; border: 1px solid lightgray;">
+            {% endif %}
+
+            {% if display_option in ['radar_chart', 'show_all'] and radar_chart %}
+            <div class="charts">
+                <h3 style="text-align: center;">Radar Chart</h3>
+                <div>{{ radar_chart | safe }}</div>
+            </div>
+            <hr style="margin: 40px 0; border: 1px solid lightgray;">
+            {% endif %}
+
+            {% if display_option in ['word_cloud', 'show_all'] and word_cloud_img %}
+            <div class="charts">
+                <h3 style="text-align: center;">Word Cloud</h3>
+                <img src="data:image/png;base64,{{ word_cloud_img }}" alt="Word Cloud" class="img-fluid" />
+            </div>
+            <hr style="margin: 40px 0; border: 1px solid lightgray;">
+            {% endif %}
+
+        </div>
+        {% endif %}
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const showMoreButton = document.getElementById("show-more");
+                const showLessButton = document.getElementById("show-less");
+                const allCommentsList = document.getElementById("all-comments");
+
+                if (showMoreButton && showLessButton && allCommentsList) {
+                    showMoreButton.addEventListener("click", function () {
+                        allCommentsList.style.display = "block"; // Show the full list
+                        showMoreButton.style.display = "none";  // Hide the "Show More" button
+                        showLessButton.style.display = "inline-block"; // Show the "Show Less" button
+                    });
+
+                    showLessButton.addEventListener("click", function () {
+                        allCommentsList.style.display = "none"; // Hide the full list
+                        showMoreButton.style.display = "inline-block"; // Show the "Show More" button
+                        showLessButton.style.display = "none";  // Hide the "Show Less" button
+                    });
+                }
+            });
+        </script>
+
+        <div>
+            {% if method == 'rasa' %}
+            <h3>Rasa Chatbot Response:</h3>
+            <ul>
+                {% for response in rasa_response %}
+                <li>{{ response['text'] }}</li>
+                {% endfor %}
+            </ul>
+            {% elif method == 'transformer' %}
+            <h3>Transformer Intent Classification:</h3>
+            <ul>
+                {% for result in transformer_response %}
+                <li>Intent: {{ result['label'] }} | Score: {{ result['score'] }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+
+
+
+        {% if trend_data %}
+        <hr style="margin: 40px 0; border: 1px solid lightgray;">
+        <div class="result-section">
+            <h2>Trend Analysis Results</h2>
+
+
+            <div class="charts">
+                <canvas id="sentimentChart" style="max-width: 100%; height: auto;"></canvas>
+            </div>
+
+            <div class="charts">
+                <h3>Trend Data Overview</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Sentiment 1 Star</th>
+                            <th>Sentiment 2 Stars</th>
+                            <th>Sentiment 3 Stars</th>
+                            <th>Sentiment 4 Stars</th>
+                            <th>Sentiment 5 Stars</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in trend_data %}
+                        <tr>
+                            <td>{{ entry['period'] }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 1'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 2'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 3'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 4'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 5'] | round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const chartData = {{ chart_data | tojson | safe
+            }};
+            const canvas = document.getElementById('sentimentChart');
+
+            if (!canvas) {
+                console.error("Canvas element with id 'sentimentChart' not found.");
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+            const labels = Object.keys(chartData);  // Periods (e.g., files or weeks)
+
+            if (labels.length === 0) {
+                console.warn("No labels found in chartData.");
+                return;
+            }
+
+            const classLabels = Object.keys(chartData[labels[0]]);  // e.g., Class 1, Class 2...
+            const datasets = classLabels.map((label, index) => {
+                const color = `rgba(${(index * 60) % 255}, ${(index * 100) % 255}, ${(index * 150) % 255}, 0.6)`;
+                return {
+                    label: label,
+                    data: labels.map(period => chartData[period][label]),
+                    backgroundColor: color,
+                    borderColor: color,
+                    borderWidth: 1
+                };
+            });
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Sentiment Scores by Period'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Period'
+                            },
+                            ticks: {
+                                maxRotation: 30,
+                                minRotation: 15
+                            }
+                        },
+                        y: {
+                            min: 0,
+                            max: 1,
+                            title: {
+                                display: true,
+                                text: 'Score'
+                            }
+                        }
+                    }
+                }
+            });
+            });
+        </script>
+
+        {% endif %}
+
+
+        {% if advanced_type == 'absa' %}
+        <hr style="margin: 40px 0; border: 1px solid lightgray;">
+        <div class="result-section">
+            <h2>Aspect-Based Sentiment Analysis (ABSA)</h2>
+
+            <p><strong>Predicted Label:</strong> {{ predicted_label }}</p>
+            <p><strong>Predicted Score:</strong> {{ "%.2f"|format(predicted_score) }}</p>
+
+            <h4>All Scores:</h4>
+            <ul>
+                {% for label, score in absa_results.items() %}
+                <li>{{ label }}: {{ "%.2f"|format(score) }}</li>
+                {% endfor %}
+            </ul>
+
+            {% if display_option == 'bar_chart' or display_option == 'all' %}
+            <div class="bar-chart">
+                <h4>ABSA Bar Chart</h4>
+                <img src="data:image/png;base64,{{ bar_chart }}" alt="Bar Chart">
+            </div>
+            {% endif %}
+
+            {% if display_option == 'radar_chart' or display_option == 'all' %}
+            <div class="radar-chart">
+                <h4>ABSA Radar Chart</h4>
+                <img src="data:image/png;base64,{{ radar_chart }}" alt="Radar Chart">
+            </div>
+            {% endif %}
+
+            {% if display_option == 'word_cloud' or display_option == 'all' %}
+            <div class="word-cloud-emotion">
+                <h4>ABSA Word Cloud</h4>
+                <img src="data:image/png;base64,{{ word_cloud_img }}" alt="Word Cloud">
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+
+
+
+
+        <div class="buttons">
+            <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        </div>
+    </div>
+</body>
+
+</html>

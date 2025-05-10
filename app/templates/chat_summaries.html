@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat Session Summaries</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    <h2>📋 Chat Session Summaries</h2>
+
+    <p>Debug: summaries has {{ summaries|length }} items</p>
+
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Session ID</th>
+                <th>User ID</th>
+                <th>Timestamp</th>
+                <th>Category</th>
+                <th>Summary</th>
+                <th>Escalation</th>
+                <th>Sentiment</th>
+                <th>Top Emotions</th>
+                <th>Messages</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in summaries %}
+            <tr>
+                <td><a href="{{ url_for('main.view_chat_session', session_id=s.session_id) }}">{{ s.session_id }}</a></td>
+                <td>{{ s.user_id }}</td>
+                <td>{{ s.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>{{ s.category }}</td>
+                <td>{{ s.short_summary }}</td>
+                <td>{{ s.escalation_flag }}</td>
+                <td>{{ s.dominant_sentiment }}</td>
+                <td>{{ s.top_emotions }}</td>
+                <td>{{ s.total_messages }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+
+    </table>
+
+    <br><br> <br><br>
+
+
+    <a href="{{ url_for('main.export_chat_summaries') }}" class="btn btn-success">📥 Export CSV</a>
+    <br><br> 
+    <a href="{{ url_for('main.intent_classification') }}" class="back-to-chatbot">💬 Back to Chatbot</a>
+
+
+</body>
+
+</html>

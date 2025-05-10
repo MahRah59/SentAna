@@ -1,0 +1,52 @@
+### Updated `rules.yml`
+
+version: "2.0"
+
+rules:
+  # Rule for greeting
+  - rule: Greet the user
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  # Rule for thanking
+  - rule: Respond to thank you
+    steps:
+      - intent: thank_you
+      - action: utter_happy
+
+  # Rule for goodbye
+  - rule: Say goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: track_order_status_rule
+    steps:
+      - intent: track_order_status
+      - action: action_track_order
+      - action: utter_ask_anything_else
+
+
+  
+  - rule: Respond to general product inquiry
+    steps:
+      - intent: ask_about_all_products
+      - action: action_show_product_info
+
+
+
+  # Rule for services inquiry
+  - rule: Show service info
+    steps:
+      - intent: ask_services_available
+      - action: action_show_services
+      - action: utter_ask_anything_else
+
+  # Rule for product info
+  - rule: Show product info
+    steps:
+      - intent: ask_product_info
+      - action: action_show_product_info
+      - action: utter_ask_anything_else
+

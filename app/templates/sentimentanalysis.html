@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
+    <title>Sentiment Analysis</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            background-color: powderblue;
+        }
+
+        .container {
+            font-size: small;
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        #advanced-analysis-fields {
+            display: inline-block;
+            font-size: 15px;
+            width: 65%;
+            vertical-align: top;
+        }
+
+
+        #aspect-based-fields {
+            font-size: 15px;
+            /* Increase the font size */
+            width: 65%;
+            /* Adjust the width of the container */
+        }
+
+        #aspect_input {
+            font-size: 15px;
+            /* Increase the font size of the input itself */
+            width: 60%;
+            /* Make the input field span the full width of the container */
+            padding: 10px;
+            /* Add some padding for a larger field */
+        }
+
+
+
+        #sentiment-trend-analysis-options {
+            background-color: aqua;
+            display: inline-block;
+            width: 65%;
+            vertical-align: top;
+            font-size: medium;
+        }
+
+        .trendAnalysisHead {
+            font-size: 30px;
+            color: blue;
+            font-weight: bold;
+
+        }
+
+
+        #platform-subfields {
+            background-color: lightgrey;
+            font-size: medium;
+            padding:15px;
+            border-radius: 25px;
+        }
+
+
+        .pasted_article_text label {
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+
+        .pasted_article_text {
+            width: 40vw;
+
+        }
+
+        #chatbot-message-section {
+            background-color: bisque;
+            font-size: smaller;
+
+        }
+
+        #intent-classification-fields {
+            background-color: bisque;
+            font-size: smaller;
+            display: inline-block;
+            width: 30%;
+            vertical-align: top;
+            margin-left: 30px;
+        }
+
+        #chatbot-message-section {
+            font-size: smaller;
+            margin-top: 10px;
+            display: inline-block;
+
+        }
+
+        #chatbot-message-section {
+            font-size: large;
+            margin-top: 10px;
+            display: inline-block;
+
+        }
+
+        .submission-button{
+
+            background-color: red;
+        }
+
+        .button-container {
+            background-color: red;
+
+        }
+
+        .pass-button p {
+            float: right;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-style: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+
+        .top-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            margin: 10px 20px;
+            align-items: center;
+        }
+
+        .logout-button a,
+        .admin-button a {
+            padding: 8px 12px;
+            background-color: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .logout-button a:hover,
+        .admin-button a:hover {
+            background-color: #1a73e8;
+        }
+
+
+        .logout-button p {
+            float: right;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-style: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 20px;
+            margin: 10px 20px;
+            align-items: center;
+        }
+
+        .logout-button a,
+        .dropbtn {
+            padding: 8px 12px;
+            background-color: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-button a:hover,
+        .dropbtn:hover {
+            background-color: #1a73e8;
+        }
+
+        .admin-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 5px;
+        }
+
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+            font-weight: 500;
+        }
+
+        .file-fields{
+            padding: 10px;
+            margin: 10px;
+
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .admin-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 2px 2px aqua
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 4px 4px aqua
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 2px 2px aqua
+            }
+        }
+
+
+        /* Apply animation to button */
+        #start-chat {
+            position: fixed;
+            /* Fixed position on screen */
+            bottom: 30px;
+            /* 30px from bottom */
+            right: 30px;
+            /* 30px from right */
+            display: inline-block;
+            animation: pulse 2s infinite;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 18px;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+            /* Glow closer to button */
+            background-color: aqua;
+            /* Bootstrap blue */
+            color: black;
+            border: none;
+            cursor: pointer;
+            z-index: 1000;
+            /* Always on top */
+            transition: transform 0.2s;
+            /* Smooth hover effect */
+        }
+
+        /* Optional hover effect */
+        #start-chat:hover {
+            transform: scale(1.1);
+        }
+
+
+
+
+        .CRM-buttons {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: aqua;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-buttons">
+        <div class="logout-button">
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        </div>
+
+        {% if current_user.is_authenticated and current_user.is_admin %}
+        <div class="dropdown admin-dropdown">
+            <button onclick="toggleDropdown()" class="dropbtn">🚀 Admin Tools ⌄</button>
+            <div id="adminDropdown" class="dropdown-content">
+                <a href="{{ url_for('main.deployment_checklist') }}">Deployment Checklist</a>
+                <!-- Add more admin links here if needed -->
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+
+    <div class="pass-button">
+        <p><a href="{{ url_for('main.change_password') }}"> Change Your Password </a></p>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="{{ url_for('main.create_CRM_contact') }}">Create CRM Contact</a>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="{{ url_for('main.create_CRM_deal') }}">Create CRM Deal</a>
+    </div>
+
+    <div class="CRM-buttons">
+        <a href="{{ url_for('main.hubspot_contacts') }}">Download CRM Contacts</a>
+    </div>
+
+
+    <div class="chat-button" style="text-align: center; font-size: 20px; font-weight: bolder;">
+        <a href="{{ url_for('main.intent_classification') }}" id="start-chat">💬 Chat</a>
+    </div>
+
+
+
+
+    <div class="container">
+        <h1 style="text-align: center; margin-top: 5px;">Sentiment Analysis </h1>
+
+        <form method="POST" action="{{ url_for('main.sentimentanalysis') }}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+
+            <!-- Analysis Mode -->
+            <div>
+                <label>{{ form.analysis_mode.label }}</label>
+                {{ form.analysis_mode(class="form-check-input") }}
+            </div>
+
+            <hr style="margin: 15px 0; border: 2px solid powderblue;">
+
+
+            <!-- Platform Sub-fields -->
+
+            {% for subfield in form.platform %}
+            {{ subfield(onchange="handlePlatformChange()") }} {{ subfield.label }}
+            {% endfor %}
+            <hr style="margin: 15px 0; border: 2px solid powderblue;">
+
+            <div id="platform-subfields">
+                <!-- Internet Article -->
+                <div id="internet-article-fields" class="platform-fields" style="display: none; padding:10px;">
+                    <hr style="margin: 15px 0; border: 2px solid powderblue;">
+
+                    <label>{{ form.company_name.label }}</label>
+                    {{ form.company_name(class="form-control") }}
+
+                    <label>{{ form.keywords.label }}</label>
+                    {{ form.keywords(class="form-control") }}
+
+                    <label>{{ form.preferred_sources.label }}</label>
+                    {{ form.preferred_sources(class="form-control") }}
+
+                    <label>{{ form.exclusion_criteria.label }}</label>
+                    {{ form.exclusion_criteria(class="form-control") }}
+                    <br><br>
+                    <label>{{ form.time_filter.label }}</label>
+                    {{ form.time_filter(class="form-control") }}
+                    <label>{{ form.trend_time_scale.label }}</label>
+                    {{ form.trend_time_scale(class="form-control") }}
+
+
+                    <br><br><br>
+                    <hr style="margin: 15px 0; border: 2px solid powderblue;">
+
+                    <div class="form-group">
+                        <label for="pasted_article_text" style="text-align: center;">Paste Article Text
+                            (optional)</label>
+                        <textarea class="form-control" id="pasted_article_text" name="pasted_article_text" rows="6"
+                            placeholder="Paste full article content here if not using a URL..."></textarea>
+                    </div>
+
+                </div>
+                <!-- File/Dataset -->
+                <div id="file-fields" class="platform-fields" style="display: none;">
+                    <br>
+                    <label>{{ form.file_upload.label }}</label>
+                    {{ form.file_upload(class="form-control") }}
+                    <br><br><br> <br>
+
+                    <label>{{ form.large_text.label }}</label>
+                    {{ form.large_text(class="form-control") }}
+                </div>
+
+                <div id="paste-test-text-container" style="display: none; margin-top: 10px;">
+                    <label for="test-text-select">If you don't have access to your ownd text to paste <br> Select a test text here, it will be pasted automatically:</label>
+                    <select id="test-text-select" class="form-select" onchange="insertTestText()">
+                        <option value="">-- Choose --</option>
+                        <option value="VADER_Analysis">Test: VADER Analysis text</option>
+                        <option value="Generic_large_text">Test: Generic large text</option>
+                        <option value="Aspect_Based_Analysis">Test: Aspect Based Analysis text</option>
+                        <option value="Emotion_Simulator">Test: Emotion Simulator text</option>
+                    </select>
+
+                    <br>
+                </div>
+                <br>
+                <br>
+                <!-- Twitter -->
+                <div id="twitter-fields" class="platform-fields" style="display: none;">
+
+                    <label>{{ form.twitter_handle.label }}</label>
+                    {{ form.twitter_handle(class="form-control") }}
+
+
+                    <label>{{ form.twitter_url.label }}</label>
+                    {{ form.twitter_url(class="form-control") }}
+
+
+                </div>
+
+                <!-- YouTube -->
+                <div id="youtube-fields" class="platform-fields" style="display: none;">
+
+                    <label>{{ form.youtube_channel.label }}</label>
+                    {{ form.youtube_channel(class="form-control") }}
+
+                    <label>{{ form.youtube_video.label }}</label>
+                    {{ form.youtube_video(class="form-control") }}
+
+
+                    <label>{{ form.youtube_Mock_channel.label }}</label>
+                    {{ form.youtube_Mock_channel(class="form-control") }}
+
+
+                </div>
+
+                <!-- Facebook -->
+                <div id="facebook-fields" class="platform-fields" style="display: none;">
+
+
+                    <label>{{ form.facebook_page.label }}</label>
+                    {{ form.facebook_page(class="form-control") }}
+
+                    <label>{{ form.facebook_post.label }}</label>
+                    {{ form.facebook_post(class="form-control") }}
+                </div>
+
+                <!-- Instagram -->
+                <div id="instagram-fields" class="platform-fields" style="display: none;">
+
+
+                    <label>{{ form.instagram_account.label }}</label>
+                    {{ form.instagram_account(class="form-control") }}
+
+                    <label>{{ form.instagram_post.label }}</label>
+                    {{ form.instagram_post(class="form-control") }}
+                </div>
+
+
+
+                <!-- Platform Sub-fields -->
+                <div id="platform-subfields"
+                    style="font-size: medium; font-weight: bolder; color:blueviolet; font-weight: bold;">
+                    <hr style="margin: 15px 0; border: 2px solid lightcoral;">
+
+                    <label>
+                        <input type="checkbox" id="raw-text-checkbox"> Process as raw text
+                    </label>
+                    <label>
+                        <input type="checkbox" id="mock-data-checkbox" name="mock_data_checkbox"> Process if Emotion Mock Data
+                    </label>
+                    <label>
+                        <input type="checkbox" id="absa-emotion-checkbox" name="absa_emotion_checkbox"> Process if ABSA
+                        Emotion
+                    </label>
+                    <hr style="margin: 15px 0; border: 2px solid lightcoral;">
+
+                </div>
+            </div>
+            <br>
+
+            <!-- Basic Analysis Fields -->
+            <div id="basic-analysis-fields">
+                <label>{{ form.basic_analysis_type.label }}</label>
+                {{ form.basic_analysis_type(class="form-check-input") }}
+
+                <label>{{ form.basic_display_options.label }}</label>
+                {{ form.basic_display_options(class="form-check-input") }}
+            </div>
+
+            <!-- Advanced Analysis Section -->
+            <div style="display: flexbox;">
+                <!-- Advanced Analysis Fields -->
+                <div id="advanced-analysis-fields" style="display: none;">
+                    <!-- Render "Select Analysis Type" only once -->
+                    <label>{{ form.advanced_analysis_type.label }}</label>
+                    {{ form.advanced_analysis_type(class="form-check-input") }}
+                    <!-- Rendering "Advanced Analysis Type" once -->
+                </div>
+            </div>
+
+            <div id="emotion-options-container" style="display: none; margin-top: 10px;">
+                <!-- Emotion-specific controls go here -->
+                <p>Select emotion visualization or paste emotion test text...</p>
+            </div>
+
+            <!-- Aspect Based Input -->
+            <div id="aspect-based-fields" style="display: none;">
+                <label>Aspect Based Input</label>
+                {{ form.aspect_input(class="form-check-input") }}
+            </div>
+
+            <!-- Intent Classification Section -->
+            <div id="intent-classification-fields" style="display: none;">
+                <label>Intent Classification Method</label>
+                {{ form.intent_classification_type(class="form-check-input") }}
+            </div>
+            <br>
+
+            <!-- Chatbot Message Section -->
+            <div id="chatbot-message-section" style="display: none;">
+                <br><br>
+                <label>{{ form.chatbot_message.label }}</label>
+                <textarea id="chat-input" class="form-control"></textarea>
+                <button id="send-chat" class="btn btn-primary">Send</button>
+                <button id="quit-chat" class="btn btn-danger">Quit Chat</button>
+                <button id="go-back" class="btn btn-secondary">Go Back to Sentiment Analysis</button>
+
+                <div id="chat-history" style="margin-top: 10px;">
+                    <p><strong>Chat History: (make CHAT HISTORY AS ITS OWN VIW)</strong></p>
+                    <div id="chat-content"></div>
+                </div>
+            </div>
+            <br><br>
+
+            <!-- Transformer Mode Section -->
+            <div id="transformer-mode-section" style="display: none;">
+                <label>Transformer Intent Prediction</label>
+                <textarea id="transformer-user-input" class="form-control"
+                    placeholder="Type your message here..."></textarea>
+                <button id="predict-intent" class="btn btn-success" style="margin-top: 10px;">Predict Intent</button>
+
+                <!-- Loading indicator -->
+                <div id="loading-indicator" style="display: none; margin-top: 10px;">
+                    <em>Loading...</em>
+                </div>
+                <div id="transformer-prediction-result" style="margin-top: 20px; display: none;">
+                    <p><strong>Predicted Intent:</strong> <span id="transformer-predicted-intent"></span></p>
+                    <p><strong>Example Response:</strong> <span id="transformer-example-response"></span></p>
+                </div>
+            </div>
+
+            <!-- Advanced Display Options -->
+            <div id="advanced-display-options" style="display: none;">
+                <label>{{ form.advanced_display_options.label }}</label>
+                {{ form.advanced_display_options(class="form-check-input") }}
+            </div>
+
+    </div>
+
+    <!-- Submit Button  -->
+    <div id="button-container" style="display: flex; gap: 80px; margin-left: 80px;">
+        <!-- Submit Button -->
+        <div id="submission-button">
+            <button type="submit" class="btn btn-primary">{{ form.submit_analyze.label }}</button>
+        </div>
+
+    </div>
+
+
+
+    <script>
+        // Redirect to trend analysis page when the button is clicked
+        $("#go-to-trend-analysis").click(function () {
+            window.location.href = "{{ url_for('main.trend_analysis') }}";
+        });
+    </script>
+
+
+    <script>
+        .then(data => {
+            document.getElementById('transformer-loading').style.display = 'none';
+
+            if (data.redirect_to_rasa) {
+                openRasaChatbot();  // (your function to open the Rasa Chatbot UI)
+            } else {
+                document.getElementById('transformer-predicted-intent').textContent = data.predicted_intent;
+                document.getElementById('transformer-example-response').textContent = data.example_response;
+                document.getElementById('transformer-prediction-result').style.display = 'block';
+            }
+        })
+    </script>
+
+
+    <script>
+
+        function showTransformerMode() {
+            document.getElementById('chatbot-message-section').style.display = 'none';
+            document.getElementById('transformer-mode-section').style.display = 'block';
+        }
+
+        function showChatbot() {
+            document.getElementById('transformer-mode-section').style.display = 'none';
+            document.getElementById('chatbot-message-section').style.display = 'block';
+        }
+
+    </script>
+
+
+
+    </form>
+    </div>
+
+    <script>
+
+        document.getElementById('predict-intent').addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const userInput = document.getElementById('transformer-user-input').value;
+
+            fetch('/predict_intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_input: userInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('transformer-predicted-intent').textContent = data.predicted_intent;
+                    document.getElementById('transformer-example-response').textContent = data.example_response;
+                    document.getElementById('transformer-prediction-result').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Function to handle showing/hiding fields based on analysis mode and analysis type
+            function toggleFields() {
+                const mode = $('input[name="analysis_mode"]:checked').val() || 'basic'; // Default to 'basic'
+                const selectedAnalysisType = $('input[name="advanced_analysis_type"]:checked').val();
+                const selectedIntentType = $('input[name="intent_classification_type"]:checked').val();
+
+                // Hide all fields initially
+                $('#basic-analysis-fields').hide();
+                $('#advanced-analysis-fields').hide();
+                $('#intent-classification-fields').hide();
+                $('#chatbot-message-section').hide();
+                $('#advanced-display-options').hide();
+                $('#submission-button').hide();
+                $('#start-trend-button').hide();
+                $('#platform-section').hide(); // Hide platform selection by default
+
+                // Handle Basic Mode
+                if (mode === 'basic') {
+                    $('#basic-analysis-fields').show();
+                    $('#submission-button').show(); // Show the Submit button for basic analysis
+                    $('#platform-section').show(); // Show platform selection
+                }
+
+                // Handle Advanced Mode
+                else if (mode === 'advanced') {
+                    $('#advanced-analysis-fields').show();
+                    $('#advanced-display-options').show(); // Show advanced display options
+
+
+                    /***
+                    // Sentiment Trend Analysis logic
+                    if (selectedAnalysisType === 'trend_analysis') {
+                        $('#advanced-display-options').hide(); // Hide display options for trend analysis
+                        $('#submission-button').show(); // Hide Submit button for trend analysis
+                        $('#start-trend-button').show(); // Show the "Start Trend Analysis" button
+                        $('#platform-section').show(); // Hide social media platform selection for trend analysis
+                    } 
+                    else {
+                        $('#platform-section').show(); // Show platform selection for other analysis types
+                        $('#submission-button').show(); // Show Submit button for other analysis types
+                    }
+
+                    **/
+
+
+                    if (selectedAnalysisType === 'trend_analysis') {
+                        window.location.href = "{{ url_for('main.trend_analysis') }}";
+                    }
+
+                    if (selectedAnalysisType === 'multilingual') {
+                        window.location.href = "{{ url_for('main.msa_tools') }}";
+                    }
+
+                    // Aspect Based  logic
+                    if (selectedAnalysisType === 'absa') {
+                        $('#advanced-display-options').show(); // Hide display options for trend analysis
+                        $('#submission-button').show(); // Hide Submit button for trend analysis
+                        $('#aspect-based-fields').show(); // Show the "Start Trend Analysis" button
+                        $('#platform-section').show(); // Hide social media platform selection for trend analysis
+                        $('#start-trend-button').hide(); // Show the "Start Trend Analysis" button
+
+                    } else {
+                        $('#platform-section').show(); // Show platform selection for other analysis types
+                        $('#submission-button').show(); // Show Submit button for other analysis types
+                    }
+
+                    // Intent Classification logic
+
+                    if (selectedAnalysisType === 'intent_classification') {
+                        window.location.href = "{{ url_for('main.intent_classification') }}";
+                    }
+
+                }
+            }
+
+
+
+
+            // Function to handle the platform subfields
+            function togglePlatformSubfields() {
+                const platform = $('input[name="platform"]:checked').val();
+
+                // Hide all platform fields first
+                $('.platform-fields').hide();
+
+                // Show the correct platform-specific fields
+                if (platform === 'internet_articles') {
+                    $('#internet-article-fields').show();  // ✅ Ensure Internet Articles section is shown
+                } else if (platform) {
+                    $(`#${platform}-fields`).show(); // Show other platform-specific fields
+                }
+            }
+
+
+            // Event listener for chatbot message submission
+            $('#send-chat').on('click', function (e) {
+                e.preventDefault();  // Prevent default form submission
+
+                const userMessage = $('#chat-input').val().trim();
+                if (!userMessage) {
+                    alert('Please enter a message.');
+                    return;
+                }
+
+                // Append user message to chat content
+                $('#chat-content').append(`<p><strong>You:</strong> ${userMessage}</p>`);
+                $('#chat-input').val('');
+
+                // Retrieve CSRF token from meta tag
+                const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                // Send AJAX request with CSRF token
+                $.ajax({
+                    url: '/chatbot',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ message: userMessage }),
+                    headers: {
+                        'X-CSRFToken': csrfToken, // Add CSRF token to headers
+                    },
+                    success: function (response) {
+                        console.log("Rasa response received:", response);
+                        if (response.message) {
+                            $('#chat-content').append(`<p><strong>Bot:</strong> ${response.message}</p>`);
+                        } else {
+                            $('#chat-content').append(`<p><strong>Bot:</strong> Sorry, no response received.</p>`);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        $('#chat-content').append(`<p><strong>Bot:</strong> An error occurred. Please try again later.</p>`);
+                    }
+                });
+            });
+
+            // Initialize visibility on page load
+            toggleFields(); // Force initialization on page load
+            togglePlatformSubfields(); // Initialize platform-specific fields visibility
+            handlePlatformChange();  // ✅ Now called directly on page load
+
+            // Event listeners for changes in analysis mode, analysis type, platform, etc.
+            $('input[name="analysis_mode"]').on('change', function () {
+                toggleFields(); // Update visibility based on analysis mode (basic/advanced)
+            });
+
+            $('input[name="advanced_analysis_type"]').on('change', function () {
+                toggleFields(); // Update visibility based on selected advanced analysis type
+            });
+
+            $('input[name="intent_classification_type"]').on('change', function () {
+                toggleFields(); // Update visibility based on selected intent classification type
+            });
+
+            $('input[name="platform"]').on('change', function () {
+                togglePlatformSubfields(); // Update platform-specific fields visibility
+            });
+
+            $('input[name="sentiment_trend_analysis_type"]').on('change', function () {
+                toggleSentimentTrendAnalysis(); // Update Sentiment Trend Analysis options visibility
+            });
+
+            // Handle Intent Classification type changes
+            $('input[name="intent_classification_type"]').on('change', function () {
+                toggleIntentClassificationFields(); // Update fields based on intent classification type
+            });
+
+            // Attach event listener to detect platform changes
+            $('input[name="platform"]').on('change', function () {
+                togglePlatformSubfields(); // Update visibility of platform-specific fields
+            });
+
+        });
+
+    </script>
+    <script>
+        function handlePlatformChange() {
+            const selectedPlatform = document.querySelector('input[name="platform"]:checked')?.value;
+            const pasteTestContainer = document.getElementById("paste-test-text-container");
+            const emotionOptions = document.getElementById("emotion-options-container");
+
+            if (selectedPlatform === "file") {
+                pasteTestContainer.style.display = "block";
+                emotionOptions.style.display = "block"; // show emotion section too
+            } else {
+                pasteTestContainer.style.display = "none";
+                emotionOptions.style.display = "none";
+            }
+        }
+    </script>
+
+
+    <script>
+        function insertTestText() {
+            const selected = document.getElementById("test-text-select").value;
+            if (!selected) return;
+
+            const filePath = `/static/Test_data/${selected}.txt`;
+            const textArea = document.getElementById("large_text");
+
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error("File not found");
+                    return response.text();
+                })
+                .then(data => {
+                    textArea.value = data;
+                    textArea.cols = 100;  // 👈 wider text area
+                    textArea.rows = 10;  // 👈 Make it taller when text is loaded
+                })
+                .catch(error => {
+                    textArea.value = "";
+                    textArea.rows = 4;  // Optional: shrink back if there's an error
+                    alert("Failed to load sample text.");
+                    console.error(error);
+                });
+        }
+    </script>
+
+
+
+    <script>
+
+        document.getElementById('add-slang-button').addEventListener('click', function () {
+            let original = document.getElementById('original-word').value;
+            let replacement = document.getElementById('replacement-word').value;
+
+            fetch('/add_slang', {
+                method: 'POST',
+                body: JSON.stringify({ original: original, replacement: replacement }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                });
+        });
+    </script>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById("adminDropdown").classList.toggle("show");
+        }
+
+        // Optional: close dropdown if clicked outside
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    let openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+
+
+
+</body>
+
+</html>

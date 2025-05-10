@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Intent Classification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        body {
+            background-color: beige;
+        }
+
+        .sentiment-button {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: aqua;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bolder;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .logout-button p {
+            background-color: aquamarine;
+            padding: 10px;
+            float: right;
+            margin-top: 0px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bolder;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .chat-summary-button {
+            background-color: aqua;
+            padding: 8px;
+            display: inline-table;
+            font-weight: bolder;
+            color:black;
+            border-radius: 15px;
+            cursor: pointer;
+
+        }
+
+        .form-check {
+            font-size: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-table;
+
+            /* Increase the font size of the input itself */
+            /* Make the input field span the full width of the container */
+            padding: 2px;
+            /* Add some padding for a larger field */
+        }
+
+
+      
+
+        #chat-input::placeholder {
+            font-weight: bold;
+            /* Make it bold */
+            color: blue;
+            /* Make it gold/yellow */
+            opacity: 2;
+            /* Full opacity so color is visible */
+        }
+
+
+
+        .chat-history {
+            color: black;
+            background-color: goldenrod;
+
+
+        }
+
+        .chat-content {
+            color: black;
+
+        }
+
+        .chat-input {
+            color: black;
+            font-size: large;
+
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="logout-button">
+        <p><a href="{{ url_for('main.logout') }}">Logout</a></p>
+    </div>
+
+    <div class="sentiment-button">
+        <a href="{{ url_for('main.sentimentanalysis') }}">Back to Sentiment Analysis</a>
+
+    </div>
+
+
+
+    <h1 style="text-align: center;">
+        </style>Intent Classification</h1>
+
+     <!-- Export Chat Summaries Button -->
+     <div class="chat-summary-button">
+        <a href="{{ url_for('main.chat_summaries') }}">📊  View Chat Summaries</a>
+        <hr style="margin: 3px 0; border: 5px solid lightgray;">
+        <a href="{{ url_for('main.export_chat_summaries') }}"> 📥  Export Chat Summaries (CSV)</a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <!-- Intent Classification Form -->
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <label style="text-align: center; font-weight: bolder; font-size: 20px;">
+            {{ form.intent_classification_type.label }} </label> 
+        {% for subfield in form.intent_classification_type %}
+        <br>
+        <div class="form-check">
+            {{ subfield(class="form-check-input") }}
+            {{ subfield.label(class="form-check-label") }}
+        </div>
+        {% endfor %}
+    </form>
+
+    <!-- Chatbot (Rasa) Section -->
+    <div id="chatbot-message-section" style="display: block;"> <!-- Default visible -->
+        <br> <textarea id="chat-input" class="form-control" placeholder="Start your chat here ..."></textarea>
+        <br> <br>
+        <button id="send-chat" class="btn btn-primary">Send</button>
+        <button id="quit-chat" class="btn btn-danger">Quit Chat</button>
+        <button id="go-back" class="btn btn-secondary">Go Back to Sentiment Analysis</button>
+        <br>
+
+        <div id="chat-history" style="margin-top: 10px; color:black" ;>
+            <p><strong>Chat History:</strong></p>
+            <div id="chat-content" stle="font-size:15px;"></div>
+        </div>
+    </div>
+
+    <br>
+    <!-- Transformer Mode Section -->
+    <div id="transformer-mode-section" style="display: none;"> <!-- Default hidden -->
+        <br><br> <textarea id="transformer-user-input" class="form-control"
+            placeholder="Type your message here..."></textarea><br><br>
+        <button id="predict-intent" class="btn btn-success" style="margin-top: 10px;">Predict Intent</button>
+        <br>
+        <br>
+
+        <div id="loading-indicator" style="display: none; margin-top: 10px;">
+            <em>Loading...</em>
+        </div>
+
+        <div id="transformer-prediction-result" style="margin-top: 20px; display: none;">
+            <p><strong>Predicted Intent:</strong> <span id="transformer-predicted-intent"></span></p>
+            <p><strong>Example Response:</strong> <span id="transformer-example-response"></span></p>
+        </div>
+    </div>
+
+   
+
+    <!-- Link your external JS file -->
+    <script src="{{ url_for('static', filename='your_script.js') }}"></script>
+
+    <!-- Inline JavaScript for toggling sections -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const intentOptions = document.getElementsByName('intent_classification_type');
+
+            intentOptions.forEach(option => {
+                option.addEventListener('change', function () {
+                    if (this.value === 'rasa') {
+                        document.getElementById('chatbot-message-section').style.display = 'block';
+                        document.getElementById('transformer-mode-section').style.display = 'none';
+                    } else if (this.value === 'transformer_mode') {
+                        document.getElementById('chatbot-message-section').style.display = 'none';
+                        document.getElementById('transformer-mode-section').style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+
+        // Send Chat message to Rasa Server
+        document.getElementById('send-chat').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const userMessage = document.getElementById('chat-input').value;
+
+            fetch('/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ message: userMessage })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const chatContent = document.getElementById('chat-content');
+                    chatContent.innerHTML += `<div><strong>You:</strong> ${userMessage}</div>`;
+                    chatContent.innerHTML += `<div><strong>Bot:</strong> ${data.message}</div>`;
+
+                    document.getElementById('chat-input').value = ''; // Clear input
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+
+
+        // Quit chat
+        document.getElementById('quit-chat').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('chat-content').innerHTML = ''; // Clear chat
+            document.getElementById('chat-input').value = '';       // Clear input
+        });
+
+
+        // Go back to sentiment
+        document.getElementById('go-back').addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = "{{ url_for('main.sentimentanalysis') }}"; // Adjust if needed
+        });
+
+        // for Transform Mode:
+
+        document.getElementById('predict-intent').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const userInput = document.getElementById('transformer-user-input').value;
+
+            document.getElementById('loading-indicator').style.display = 'block';
+
+            fetch('/predict_intent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_input: userInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading-indicator').style.display = 'none';
+                    document.getElementById('transformer-predicted-intent').textContent = data.predicted_intent;
+                    document.getElementById('transformer-example-response').textContent = data.example_response;
+                    document.getElementById('transformer-prediction-result').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('loading-indicator').style.display = 'none';
+                });
+        });
+    </script>
+    <script>
+        let enterPressCount = 0;
+
+        document.getElementById('chat-input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                if (!e.shiftKey) {  // If SHIFT is not pressed
+                    enterPressCount++;
+
+                    if (enterPressCount === 2) {
+                        e.preventDefault(); // Prevent default new line
+                        document.getElementById('send-chat').click(); // Trigger Send button
+                        enterPressCount = 0; // Reset counter
+                    }
+                }
+            } else {
+                enterPressCount = 0; // Reset counter if any other key is pressed
+            }
+        });
+
+
+        if (enterPressCount === 2) {
+            e.preventDefault();
+            if (confirm('Send this message?')) {
+                document.getElementById('send-chat').click();
+            }
+            enterPressCount = 0;
+        }
+
+
+    </script>
+
+    <script>
+
+        document.getElementById('quit-chat').addEventListener('click', function () {
+            fetch('/quit_chat', {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Chat session ended and summary saved.');
+                        location.reload();  // Or redirect to another page
+                    } else {
+                        alert('Failed to end chat session.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error ending chat session.');
+                });
+        });
+
+
+    </script>
+
+
+</body>
+
+</html>

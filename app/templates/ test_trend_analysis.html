@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Trend Analysis</title>
+</head>
+<body>
+    <h1>Test Trend Analysis</h1>
+
+    <!-- Trend Analysis Form -->
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div>
+            <label for="start_date">{{ form.start_date.label }}</label>
+            {{ form.start_date() }}
+        </div>
+        <div>
+            <label for="end_date">{{ form.end_date.label }}</label>
+            {{ form.end_date() }}
+        </div>
+        <div>
+            <label for="trend_time_scale">{{ form.trend_time_scale.label }}</label>
+            {{ form.trend_time_scale() }}
+        </div>
+        <div>
+            {{ form.submit_trend_analysis() }}
+        </div>
+    </form>
+
+    <!-- Display the Results -->
+    {% if trend_data %}
+    <h2>Trend Analysis Results</h2>
+    <p>Start Date: {{ trend_data.start_date }}</p>
+    <p>End Date: {{ trend_data.end_date }}</p>
+    <p>Time Scale: {{ trend_data.time_scale }}</p>
+    <p>Status: {{ trend_data.status }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Sentiment</th>
+                <th>Trend</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trend in trend_data.trends %}
+            <tr>
+                <td>{{ trend.date }}</td>
+                <td>{{ trend.sentiment }}</td>
+                <td>{{ trend.trend }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection Results</title>
+</head>
+<body>
+    <h1>Emotion Detection Results</h1>
+    <table border="1" style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Text</th>
+                <th>Emotions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in results %}
+            <tr>
+                <td>{{ row['text'] }}</td>
+                <td>
+                    <ul>
+                        {% for emotion, score in row['emotions'].items() %}
+                        <li>{{ emotion }}: {{ score }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('main.sentimentanalysis') }}">Back to Analysis</a>
+</body>
+</html>

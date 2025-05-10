@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multilingual Sentiment Analysis (MSA) Tools</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    <h1>Multilingual Sentiment Analysis: Preprocessing Tools</h1>
+
+    <h2>Custom Slang Manager</h2>
+
+    <input type="text" id="original-word" placeholder="Enter slang word">
+    <input type="text" id="replacement-word" placeholder="Enter replacement">
+    <button id="add-slang-button">Add Custom Slang</button>
+
+    <div id="custom-slang-list" style="margin-top: 20px;">
+        <h3>Custom Slang Dictionary:</h3>
+        <ul id="slang-dictionary"></ul>
+    </div>
+
+    <script src="{{ url_for('static', filename='msa_tools.js') }}"></script>
+
+</body>
+</html>

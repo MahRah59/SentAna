@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentAna – Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_new.css') }}">
+    <!-- AOS Animation CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <meta name="description" content="SentAna - AI-powered Sentiment and Emotion Analysis for Businesses">
+    <script>
+        window.onload = function () {
+            localStorage.clear();
+            sessionStorage.clear();
+            document.cookie.split(";").forEach(function (c) {
+                document.cookie = c.trim().split("=")[0] + "=;expires=" + new Date(0).toUTCString() + ";path=/";
+            });
+        };
+    </script>
+</head>
+
+<body>
+
+    <header class="upper">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/sentana_logo_main.png') }}" alt="SentAna Logo"
+                class="logo-img">
+        </div>
+    
+
+        <div class="auth-links">
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}">Login</a>
+            <a href="{{ url_for('main.register') }}">Sign Up</a>
+            {% endif %}
+        </div>
+
+        <div class="language-selector">
+            <select>
+                <option value="en">🇬🇧 EN</option>
+                <option value="sv">🇸🇪 SV</option>
+            </select>
+        </div>
+    </header>
+
+    <main class="middle">
+        <!-- Welcome Section -->
+        <section class="column welcome" data-aos="fade-up">
+            <h2>Welcome to <span class="brand">SentAna</span></h2>
+            <div class="scroll-banner">
+                <span>📢 AI-powered insights · 💬 Real-time sentiment detection · 📊 Scalable analysis · 🔍 Emotion &
+                    trend discovery</span>
+            </div>
+            <p><strong>AI-powered insights made simple.</strong> SentAna helps you turn customer feedback into
+                actionable intelligence — using real-time sentiment, emotion, and trend analysis powered by advanced AI.
+            </p>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.sentimentanalysis') }}" class="btn-primary">Start Analysis</a>
+            {% else %}
+            <p><strong>Please <a href="{{ url_for('main.login') }}">log in</a> or <a
+                        href="{{ url_for('main.register') }}">sign up</a> to get started.</strong></p>
+            <a href="{{ url_for('main.login') }}" class="btn-primary">Log In to Start</a>
+            {% endif %}
+        </section>
+
+
+        <!-- Feature Section -->
+        <section class="column features" data-aos="fade-up" data-aos-delay="100">
+            <h2>Key Features</h2>
+            <ul class="feature-list">
+                <li>📊 Real-Time Sentiment & Emotion Analysis</li>
+                <li>🔍 NLP-Powered Understanding of Customer Feedback</li>
+                <li>📈 Trend Tracking Over Time</li>
+                <li>⚠️ Smart Escalation Detection</li>
+                <li>🤖 CRM & Chatbot Integration</li>
+            </ul>
+        </section>
+
+
+        <section class="column video" data-aos="fade-up" data-aos-delay="200">
+            <h2>Watch Introduction</h2>
+            <video class="intro-video" controls poster="{{ url_for('static', filename='images/video_poster.jpg') }}">
+                <source src="{{ url_for('static', filename='videos/SentAna_Intro.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <p class="video-caption">See how SentAna uncovers meaning in your customer conversations using AI.</p>
+        </section>
+
+    </main>
+
+
+    <!-- TO BE IMPLEMENTED LATER...
+    <section class="how-it-works" data-aos="fade-up">
+        <h2>How It Works</h2>
+        <div class="workflow-steps">
+            <div class="step">
+                <h3>1. Input Your Data</h3>
+                <p>Upload text, chat transcripts, or connect to CRM/chatbot platforms.</p>
+            </div>
+            <div class="step">
+                <h3>2. SentAna Analyzes It</h3>
+                <p>Our AI analyzes sentiment, emotions, and patterns in real time.</p>
+            </div>
+            <div class="step">
+                <h3>3. Visualize & Act</h3>
+                <p>Get insights, alerts, and visual reports to guide smarter decisions.</p>
+            </div>
+        </div>
+    </section>
+
+-->
+    <footer class="lower">
+        <div class="footer-column">
+            <h3>About Us</h3>
+            <a href="/companyinfo">Company Info</a><br>
+        </div>
+
+        <div class="footer-column">
+            <h3>Contact</h3>
+            <a href="/email">Email</a><br>
+            <a href="/phone">Phone</a>
+        </div>
+
+        <div class="footer-column">
+            <h3>Use Cases</h3>
+            <ul class="use-case-list">
+                <li>🛍️ Analyze product reviews to improve features</li>
+                <li>🎧 Detect frustration in support chat in real-time</li>
+                <li>📊 Spot sentiment shifts over time</li>
+                <li>⚠️ Trigger alerts on negative trends</li>
+            </ul>
+        </div>
+
+        <p class="footer-bottom">&copy; 2025 SentAna. All rights reserved.</p>
+    </footer>
+
+
+    <!-- AOS Animation JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+        });
+    </script>
+
+
+
+</body>
+
+</html>

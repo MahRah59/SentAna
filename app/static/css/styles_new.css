@@ -1,0 +1,330 @@
+/* General Styles */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 1px;
+    padding: 0;
+    border-radius: 5px;
+    color: #333;
+}
+
+
+.logo-img {
+    margin: 10px;
+    background-color:black;
+    border-radius: 10px;
+    max-width: 200px;
+    object-fit: contain;
+}
+
+/* Header */
+.upper {
+    background-color: lightblue; /* Fixed missing semicolon */
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row; /* Ensure items are in a row */
+    align-items: center;
+    justify-content: space-between;
+    height: 10vh; /* Set height to 20% of viewport height */
+    box-sizing: border-box; /* Include padding and border in the height */
+}
+
+.header-container {
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.logo-img {
+    color:black;
+    height: 50px;
+}
+
+/* Navigation */
+.nav-links {
+    display: flex; /* Added display flex to nav links */
+    gap: 20px;
+}
+
+.nav-links a {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* Auth Links */
+.auth-links {
+    display: flex; /* Added display flex to auth links */
+    gap: 15px;
+}
+
+.auth-links a {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Language Selector */
+.language-selector select {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+/* Main Content - Middle Section */
+.middle {
+    background-color: goldenrod;
+    display: flex;
+    flex-direction: row; /* Ensure items are in a row */
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap; /* Ensure responsiveness */
+    padding: 40px 10%;
+    gap: 40px;
+    text-align: center;
+    height: 65vh; /* Set height to 20% of viewport height */
+    box-sizing: border-box; /* Include padding and border in the height */
+}
+
+.column {
+    flex: 1;
+    min-width: 250px;
+    max-width: 30%;
+    text-align: center;
+}
+
+
+.middle {
+    align-items: flex-start; /* Align all column content to the top */
+}
+
+.column h2 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-disabled {
+    background-color: grey;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: not-allowed;
+}
+
+.scroll-banner {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border-bottom: 2px solid #004080;
+    margin-bottom: 10px;
+}
+
+.scroll-banner span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll-left 15s linear infinite;
+    color: #004080;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.welcome-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    font-size: 14px;
+    text-align: left;
+}
+
+.welcome-highlights li {
+    margin: 8px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.welcome-highlights li::before {
+    content: \"✔️\";
+    position: absolute;
+    left: 0;
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1.8;
+    font-weight: 500;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.feature-list li::before {
+    content: '';
+    display: none; /* removes the default bullet */
+}
+
+.feature-list {
+    margin-left: 95px;
+}
+
+
+/* Footer */
+.lower {
+    background-color: lightblue;
+    color: black; /* corrected lower color */
+    padding: 20px 10%;
+    display: flex;
+    flex-direction: row; /* Ensure row layout */
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    height: 25vh; /* Set height to 20% of viewport height */
+    box-sizing: border-box; /* Include padding and border in the height */
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+    text-align: left;
+}
+
+.footer-column h3 {
+    margin-bottom: 10px;
+}
+
+.footer-column a {
+    color: black; /* corrected footer link color */
+    text-decoration: none;
+}
+
+.footer-column a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    font-size: x-small;
+}
+
+.use-case-list {
+    list-style: none;
+    padding: 0;
+    font-size: 11px;
+}
+
+.use-case-list li {
+    margin-bottom: 6px;
+    font-size: 9x;
+}
+
+.how-it-works {
+    background-color: #f0f8ff;
+    padding: 50px 10%;
+    text-align: center;
+}
+
+.workflow-steps {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.step {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 30%;
+    min-width: 250px;
+}
+
+.step h3 {
+    color: #004080;
+    margin-bottom: 10px;
+}
+
+@media screen and (max-width: 768px) {
+    .middle,
+    .lower,
+    .workflow-steps {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .column,
+    .footer-column,
+    .step {
+        width: 90%;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .feature-list,
+    .use-case-list {
+        text-align: center;
+    }
+
+    .scroll-banner span {
+        font-size: 13px;
+    }
+}
+
+
+.intro-video {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.video-caption {
+    font-size: 13px;
+    margin-top: 10px;
+    color: #333;
+}

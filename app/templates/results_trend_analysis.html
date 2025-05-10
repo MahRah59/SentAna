@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Trend Analysis Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f8ff; color: #333; margin: 0; padding: 0; }
+        h1, h2 { text-align: center; }
+        .container { padding: 20px; max-width: 800px; margin: auto; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 10px; }
+        .alert { padding: 20px; font-style: italic; font-size: large; font-weight: bolder; color: red; }
+        button { background-color: #0073e6; color: white; border: none; padding: 10px 20px; font-size: 12px; cursor: pointer; border-radius: 15px; margin: 5px; }
+        button:hover { background-color: goldenrod; }
+        .top-buttons, .bottom-buttons { display: flex; justify-content: space-between; padding: 10px; width: 100%; }
+        .charts { background-color: #f0f8ff; text-align: center; margin-top: 20px; }
+        th, td { padding: 10px; }
+        td:first-child, th:first-child { width: 200px; }
+        img { width: 100%; max-width: 800px; height: auto; }
+        .top-buttons button, .bottom-buttons button { width: 20%; }
+        .fallback-entry { background-color: #fff3cd; border-left: 5px solid #ff9800; padding: 1em; margin-bottom: 1em; border-radius: 6px; }
+        .fallback-label { background: #ff9800; color: white; padding: 2px 6px; font-size: 0.85em; border-radius: 4px; margin-left: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="top-buttons">
+        <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+        <button onclick="window.location.href='{{ url_for('main.logout') }}'">Logout</button>
+    </div>
+
+    <div class="container">
+        <h1>
+            {% if trend_analysis_type == 'aspect_based' %}
+                Aspect-Based Trend Analysis Results
+            {% else %}
+                Trend Analysis Results
+            {% endif %}
+        </h1>
+
+
+
+        {% if aspect %}
+        <div style="text-align:center; margin: 20px;">
+            <p><strong>Analyzed Aspect:</strong> {{ aspect }}</p>        </div>
+        {% endif %}
+
+
+        {% if source_type %}
+        <div style="text-align:center; margin: 20px;">
+            <p><strong>Source Type :</strong> {{ source_type }}</p>        </div>
+        {% endif %}
+
+
+        <form method="POST">
+            <label for="trend_analysis_mode">View:</label>
+            <select name="trend_analysis_mode" onchange="this.form.submit()">
+                <option value="sentiment" {% if trend_analysis_mode=='sentiment' %}selected{% endif %}>Sentiment</option>
+                <option value="emotion" {% if trend_analysis_mode=='emotion' %}selected{% endif %}>Emotion</option>
+            </select>
+        </form>
+
+        {% for entry in trend_data %}
+        <div class="trend-entry {% if entry.fallback_single_group %}fallback-entry{% endif %}">
+            <h4>
+                Period: {{ entry.period }}
+                {% if entry.fallback_single_group %}
+                    <span class="fallback-label">(Fallback Used)</span>
+                {% endif %}
+            </h4>
+            <p><strong>Sentiment:</strong> {{ entry.sentiment_scores }}</p>
+            <p><strong>Emotion:</strong> {{ entry.emotion_scores }}</p>
+        </div>
+        {% endfor %}
+
+        <div class="charts">
+            {% if trend_analysis_mode == 'emotion' %}
+                <h3>Emotion Trend Chart</h3>
+                <img src="{{ chart_data_emotion }}" alt="Emotion Trend Bar Chart" />
+
+                {% if fallback_single_group %}
+                <div class="alert alert-warning">
+                    ⚠️ No valid timestamps were detected in the input. Entire text analyzed as a single period.
+                </div>
+                {% endif %}
+
+                <h3>Emotion Trend Data</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>Very Positive</th>
+                            <th>Positive</th>
+                            <th>Neutral</th>
+                            <th>Negative</th>
+                            <th>Very Negative</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in aggregated_trend_data_emotion %}
+                        <tr>
+                            <td>{{ entry.period }}</td>
+                            <td>{{ entry.very_positive | round(3) }}</td>
+                            <td>{{ entry.positive | round(3) }}</td>
+                            <td>{{ entry.neutral | round(3) }}</td>
+                            <td>{{ entry.negative | round(3) }}</td>
+                            <td>{{ entry.very_negative | round(3) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <h3>Sentiment Trend Chart</h3>
+                <img src="{{ chart_data_sentiment }}" alt="Sentiment Trend Bar Chart" />
+
+                {% if fallback_single_group %}
+                <div class="alert alert-warning">
+                    ⚠️ No valid timestamps were detected in the input. Entire text analyzed as a single period.
+                </div>
+                {% endif %}
+
+                <h3>Sentiment Trend Data</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Period</th>
+                            <th>1 Star</th>
+                            <th>2 Stars</th>
+                            <th>3 Stars</th>
+                            <th>4 Stars</th>
+                            <th>5 Stars</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in aggregated_trend_data_sentiment %}
+                        <tr>
+                            <td>{{ entry['period'] }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 1'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 2'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 3'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 4'] | round(2) }}</td>
+                            <td>{{ entry['sentiment_scores']['Class 5'] | round(2) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+        {% set any_fallback = trend_data | selectattr("fallback_single_group") | list | length > 0 %}
+        {% if any_fallback %}
+        <div style="text-align:center; margin: 20px;">
+            <span class="fallback-label">⚠️ Fallback Used for one or more entries — analyzed without time grouping.</span>
+        </div>
+        {% endif %}
+
+        <div class="bottom-buttons">
+            <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+            <button onclick="window.location.href='{{ url_for('main.logout') }}'">Logout</button>
+        </div>
+    </div>
+</body>
+</html>

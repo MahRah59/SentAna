@@ -1,0 +1,70 @@
+{
+  "type": "MaxHistoryTrackerFeaturizer",
+  "state_featurizer": {
+    "action_texts": [],
+    "entity_tag_specs": [],
+    "feature_states": {
+      "intent": {
+        "affirm": 0,
+        "ask_about_all_products": 1,
+        "ask_about_specific_product": 2,
+        "ask_product_info": 3,
+        "ask_services_available": 4,
+        "back": 5,
+        "deny": 6,
+        "goodbye": 7,
+        "greet": 8,
+        "nlu_fallback": 9,
+        "out_of_scope": 10,
+        "restart": 11,
+        "session_start": 12,
+        "thank_you": 13,
+        "track_order_status": 14
+      },
+      "action_name": {
+        "action_listen": 0,
+        "action_restart": 1,
+        "action_session_start": 2,
+        "action_default_fallback": 3,
+        "action_deactivate_loop": 4,
+        "action_revert_fallback_events": 5,
+        "action_default_ask_affirmation": 6,
+        "action_default_ask_rephrase": 7,
+        "action_two_stage_fallback": 8,
+        "action_unlikely_intent": 9,
+        "action_back": 10,
+        "...": 11,
+        "action_extract_slots": 12,
+        "action_show_services": 13,
+        "action_show_product_info": 14,
+        "action_track_order": 15,
+        "utter_affirm": 16,
+        "utter_ask_anything_else": 17,
+        "utter_ask_order": 18,
+        "utter_ask_order_id": 19,
+        "utter_ask_product_info": 20,
+        "utter_ask_services_available": 21,
+        "utter_ask_specific_product": 22,
+        "utter_deny": 23,
+        "utter_goodbye": 24,
+        "utter_greet": 25,
+        "utter_happy": 26,
+        "utter_thank_you": 27,
+        "utter_track_delivery": 28,
+        "utter_track_order": 29
+      },
+      "entities": {
+        "order_id": 0,
+        "product_name": 1,
+        "service_type": 2
+      },
+      "slots": {
+        "product_name_0": 0,
+        "service_type_0": 1
+      },
+      "active_loop": {}
+    }
+  },
+  "remove_duplicates": true,
+  "max_history": 5
+}

@@ -1,0 +1,71 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}"> <!-- CSRF Token -->
+
+    <title>CRM Deal Creation</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            background-color: powderblue;
+        }
+
+        .container {
+            font-size: small;
+            margin: 20px auto;
+            width: 80%;
+        }
+
+        button {
+            margin: 5px 0;
+        }
+
+        .top-right-buttons p {
+            float: right;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-right-buttons">
+        <p><a href="{{ url_for('main.logout') }}">Logout</a></p>
+    </div>
+
+    <div class="container">
+        <h3 style="text-align: center; margin-top: 5px;">Create CRM Deal</h3>
+
+        <form method="POST" action="{{ url_for('main.create_CRM_deal') }}">
+            {{ form.hidden_tag() }} <!-- CSRF protection -->
+            <br><br><br> <br>
+
+            <label for="dealname">Deal Name:</label>
+            {{ form.dealname(size=30) }}
+            <br><br><br> <br>
+
+            <label for="amount">Amount:</label>
+            {{ form.amount() }}
+            <br><br><br> <br>
+
+            <label for="dealstage">Deal Stage:</label>
+            {{ form.dealstage() }}
+            <br><br><br> <br>
+    
+            <label for="associatedcontacts">Associated Contacts:</label>
+            {{ form.associatedcontacts(multiple=True) }}
+            <br><br><br> <br>
+            
+
+            {{ form.submit() }}
+        </form>
+    </div>
+</body>
+
+</html>

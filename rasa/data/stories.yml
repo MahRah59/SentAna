@@ -1,0 +1,62 @@
+### Updated `stories.yml`
+
+version: "2.0"
+
+stories:
+  # Story for greeting
+  - story: Greet the user
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  # Story for thanking
+  - story: Thank you response
+    steps:
+      - intent: thank_you
+      - action: utter_happy
+
+  # Story for asking product info
+  - story: Ask for product info
+    steps:
+      - intent: ask_product_info
+      - action: action_show_product_info
+      - action: utter_ask_anything_else
+
+
+  
+  - story: User starts with a general inquiry and then specifies a product
+    steps:
+      - intent: ask_about_all_products
+      - action: action_show_product_info
+      - intent: ask_about_specific_product
+        entities:
+          - product_name: "laptop"
+      - action: action_show_product_info
+
+  - story: User asks about a specific product
+    steps:
+      - intent: ask_about_specific_product
+        entities:
+          - product_name: "speaker"
+      - action: action_show_product_info
+
+
+
+  # Story for asking service info
+  - story: Ask for service info
+    steps:
+      - intent: ask_services_available
+      - action: action_show_services
+      - action: utter_ask_anything_else
+  
+  - story: track_order_status_story
+    steps:
+      - intent: track_order_status
+      - action: action_track_order
+      - action: utter_ask_anything_else
+
+  # Story for goodbye
+  - story: Goodbye conversation
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye

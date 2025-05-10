@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0073e6;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        h1, h2, h3 { text-align: center; }
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .result-section { margin-bottom: 20px; }
+        .result-section p { margin: 5px 0; }
+        .charts, .word-cloud { text-align: center; margin-top: 20px; }
+        .buttons { text-align: center; margin-top: 20px; }
+        .top-right-buttons {
+            float: right;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        .download-btn {
+            display: inline-block;
+            margin-right: 10px;
+            color: black;
+            font-size: 12px;
+            padding: 10px;
+            border: goldenrod;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button, select, a {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        button:hover, select:hover, a:hover { background-color: goldenrod; }
+        .score-legend {
+            margin: 10px auto;
+            text-align: center;
+        }
+        .score-legend span {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 5px;
+            border-radius: 3px;
+        }
+        .star-1 { background-color: red; color: white; }
+        .star-2 { background-color: gold; }
+        .star-3 { background-color: white; color: black; border: 1px solid #ccc; }
+        .star-4 { background-color: #0073e6; color: white; }
+        .star-5 { background-color: green; color: white; }
+        .positive-score { color: green; }
+        .neutral-score { color: black; }
+        .negative-score { color: red; }
+        .emotion-score-table, .comments-list, .bar-chart, .radar-chart, .relevance-chart, .pie-chart, .gauge-chart {
+            background-color: #eef;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 20px auto;
+        }
+        .results-flex-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            margin-top: 20px;
+            background-color: #f8f8f8;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #comments-list,
+        #all-comments {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #comments-list li,
+        #all-comments li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-right-buttons">
+        <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+        <button onclick="window.location.href='{{ url_for('main.logout') }}'">Logout</button>
+    </div>
+    <div class="download-btn">
+        <label for="file-format">Download as:</label>
+        <select id="file-format">
+            <option value="pdf">PDF</option>
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+        </select>
+        <button id="download-button">Download</button>
+    </div>
+    <div class="container">
+        {% if result_vader %}
+        <div class="result-section">
+            <h2>VADER-based Analysis</h2>
+            <p><strong>Positive:</strong> <span class="positive-score">{{ result_vader.pos }}</span></p>
+            <p><strong>Neutral:</strong> <span class="neutral-score">{{ result_vader.neu }}</span></p>
+            <p><strong>Negative:</strong> <span class="negative-score">{{ result_vader.neg }}</span></p>
+            <p><strong>Compound:</strong> {{ result_vader.compound }}</p>
+        </div>
+        {% endif %}
+
+        {% if result_transformer %}
+        <div class="result-section">
+            <h2>Transformer-based Analysis</h2>
+            <p><strong>Label:</strong> {{ result_transformer[0].label }}</p>
+            <p><strong>Confidence:</strong> {{ result_transformer[0].score }}</p>
+        </div>
+        {% endif %}
+
+        {% if sentiment %}
+        <div class="result-section">
+            <h3>Sentiment Scores</h3>
+            {% if sentiment.get('predicted_label') %}<p><strong>Predicted Label:</strong> {{ sentiment['predicted_label'] }}</p>{% endif %}
+            {% if sentiment.get('predicted_score') %}<p><strong>Predicted Score:</strong> {{ sentiment['predicted_score'] }}</p>{% endif %}
+            {% if sentiment.get('all_scores') %}
+            <h4>All Scores:</h4>
+            <ul>
+                {% for label, score in sentiment['all_scores'].items() %}
+                <li>{{ label }}: {{ "%.2f"|format(score) }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}<p>No sentiment scores available.</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if display_option in ['pie_chart', 'all'] %}
+        <div class="pie-chart charts">
+            <h2>Pie Chart</h2>
+            {% if pie_chart %}{{ pie_chart | safe }}{% else %}<p>Pie chart data not found!</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if display_option in ['gauge', 'all'] %}
+        <div class="gauge-chart charts">
+            <h2>Gauge Chart</h2>
+            {% if gauge_chart %}{{ gauge_chart | safe }}{% else %}<p>Gauge chart data not found!</p>{% endif %}
+        </div>
+        {% endif %}
+
+        {% if display_option in ['bar_chart', 'all'] and bar_chart %}
+        <div class="bar-chart charts">
+            <h2>Bar Chart</h2>
+            <img src="data:image/png;base64,{{ bar_chart }}" alt="Bar Chart">
+        </div>
+        {% endif %}
+
+        {% if display_option in ['radar_chart', 'all'] and radar_chart %}
+        <div class="radar-chart charts">
+            <h2>Radar Chart</h2>
+            <img src="data:image/png;base64,{{ radar_chart }}" alt="Radar Chart">
+        </div>
+        {% endif %}
+
+        {% if relevance_scores %}
+        <div class="relevance-chart">
+            <h3>Relevance Scores</h3>
+            <div id="relevance-chart-div"></div>
+        </div>
+        {% endif %}
+
+        {% if emotion_results %}
+        <div class="result-section">
+            <h3>Emotion Detection</h3>
+            <div class="results-flex-container">
+                <div class="comments-list">
+                    <h4>Top Comments</h4>
+                    <ul id="comments-list">
+                        {% for comment in emotion_results[:10] %}<li>{{ comment.comment }}</li>{% endfor %}
+                    </ul>
+                    {% if emotion_results|length > 10 %}
+                    <button id="show-more">Show More</button>
+                    <button id="show-less" style="display:none;">Show Less</button>
+                    <ul id="all-comments" style="display:none;">
+                        {% for comment in emotion_results[10:] %}<li>{{ comment.comment }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="emotion-score-table">
+                    <h4>Emotion Scores</h4>
+                    <table>
+                        <tr><th>Emotion</th><th>Score</th></tr>
+                        {% for emo, score in aggregated_emotions.items() %}<tr><td>{{ emo }}</td><td>{{ "%.2f"|format(score) }}</td></tr>{% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if trend_data %}
+        <div class="result-section">
+            <h2>Trend Analysis</h2>
+            {% for data in trend_data %}
+                <p><strong>Period:</strong> {{ data['period'] }}<br>
+                Positive: {{ data['sentiment_scores']['positive_score'] }},
+                Neutral: {{ data['sentiment_scores']['neutral_score'] }},
+                Negative: {{ data['sentiment_scores']['negative_score'] }}</p>
+            {% endfor %}
+            <div class="charts">
+                <img src="data:image/png;base64,{{ trend_chart }}" alt="Trend Chart">
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="score-legend">
+            <span class="star-1">⭐ 1</span>
+            <span class="star-2">⭐ 2</span>
+            <span class="star-3">⭐ 3</span>
+            <span class="star-4">⭐ 4</span>
+            <span class="star-5">⭐ 5</span>
+        </div>
+
+        <div class="buttons">
+            <button onclick="window.location.href='{{ url_for('main.sentimentanalysis') }}'">Back to Analysis</button>
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('download-button').addEventListener('click', function () {
+            const format = document.getElementById('file-format').value;
+            window.location.href = `/download/${format}`;
+        });
+
+        {% if relevance_scores %}
+        const relevanceLabels = {{ relevance_labels | safe }};
+        const relevanceValues = {{ relevance_scores | safe }};
+        Plotly.newPlot('relevance-chart-div', [{
+            type: 'bar',
+            x: relevanceValues,
+            y: relevanceLabels,
+            orientation: 'h',
+            marker: { color: '#0073e6' },
+            hoverinfo: 'x+y',
+            text: relevanceValues.map(score => `${score}`),
+            textposition: 'auto'
+        }], {
+            margin: { l: 100, r: 30, t: 20, b: 30 },
+            xaxis: { title: 'Relevance Score' },
+            yaxis: { title: 'Source' },
+            title: 'Relevance Score by Article',
+            height: 500
+        });
+        {% endif %}
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const showMoreButton = document.getElementById("show-more");
+            const showLessButton = document.getElementById("show-less");
+            const allCommentsList = document.getElementById("all-comments");
+
+            if (showMoreButton && showLessButton && allCommentsList) {
+                showMoreButton.addEventListener("click", function () {
+                    allCommentsList.style.display = "block";
+                    showMoreButton.style.display = "none";
+                    showLessButton.style.display = "inline-block";
+                });
+
+                showLessButton.addEventListener("click", function () {
+                    allCommentsList.style.display = "none";
+                    showMoreButton.style.display = "inline-block";
+                    showLessButton.style.display = "none";
+                });
+            }
+        });
+    </script>
+</body>
+</html>

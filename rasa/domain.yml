@@ -1,0 +1,98 @@
+### Updated `domain.yml`
+
+version: "3.1"
+
+session_config:
+  session_expiration_time: 60 # Session expires after 60 minutes
+  carry_over_slots_to_new_session: true
+
+intents:
+  - greet
+  - thank_you
+  - goodbye
+  - affirm
+  - deny
+  - ask_product_info
+  - ask_services_available
+  - track_order_status
+  - ask_about_all_products
+  - ask_about_specific_product
+
+
+entities:
+  - product_name
+  - service_type
+  - order_id
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I help you today?"
+
+  utter_thank_you:
+    - text: "You're welcome! Let me know if you need anything else."
+
+  utter_goodbye:
+    - text: "Goodbye! Have a great day!"
+
+  utter_affirm:
+    - text: "Great! How can I assist you further?"
+  utter_deny:
+    - text: "Okay, let me know if you need anything else."
+
+  utter_ask_specific_product:
+    - text: "Could you please specify which product you're interested in? For example, speaker, laptop, or phone?"
+
+  utter_ask_services_available:
+    - text: "We offer services like [maintenance](service_type), [installation](service_type), and [repair](service_type). What can I assist you with?"
+
+  utter_track_delivery:
+    - text: "Let me check the status of your delivery."
+
+  utter_ask_order:
+    - text: "Please provide your order number, and I'll track it for you."
+
+  utter_ask_product_info:
+    - text: "I can help with details about [product_name]. What product would you like to know about?"
+
+  utter_track_order:
+    - text: "I'm checking the status of your order."
+
+
+  utter_ask_anything_else:
+    - text: "Is there anything else you'd like to know?"
+
+
+  utter_happy:
+    - text: "I'm glad you're happy!"
+
+  utter_ask_order_id:
+    - text: "Could you please provide your order ID?" # latest 2 of 4
+actions:
+  - action_show_services
+  - action_show_product_info
+  - action_track_order
+
+
+slots:
+  order_id:
+    type: text # Slot type matches the form input type
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: order_id # Optionally map it from an entity
+
+  product_name:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: product_name
+
+  service_type:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: service_type
+
+  
+
+      

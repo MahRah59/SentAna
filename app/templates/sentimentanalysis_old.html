@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+
+    <style>
+
+    .top-right-buttons p {
+        float: right;
+        display: inline-block;
+        margin-left: 10px; /* Adjust the margin as needed */
+      }
+
+      </style>
+</head>
+
+    <div class="top-right-buttons">
+        <p><a href="{{ url_for('main.logout') }}">Logout</a></p>
+      </div>
+      
+
+<body style="background-color:powderblue;">
+    <!-- Write your comments here <h1>Sentiment Analysis</h1> -->
+          
+    <div class="container">
+        <!-- Section 1: Analyze Social Media -->
+      <h3 style="text-align: center; margin-top: 5px;">Sentiment Analysis Social Media</h3>
+        <form method="POST" action="{{ url_for('main.sentiment_analysis') }}">
+            {{ form.csrf_token }}
+
+            <!-- Select Platform -->
+            <label for="platform">Select Platform:</label><br>
+            {{ form.platform() }}  <!-- Automatically rendered radio buttons -->
+
+            <!-- Platform-Specific Inputs (hidden or shown based on selected platform) -->
+            <div id="twitter-inputs" class="platform-inputs" style="display:none;">
+                <label for="twitter-handle">Twitter Handle or Hashtag:</label>
+                {{ form.twitter_handle() }}<br><br>
+                <label for="tweet-url">Tweet URL:</label>
+                {{ form.tweet_url() }}<br><br>
+                <label for="twitter-text">Enter Text:</label>
+                {{ form.tweet_text() }}<br>
+            </div>
+
+            <div id="facebook-inputs" class="platform-inputs" style="display:none;">
+                <label for="facebook-page">Facebook Page Name:</label>
+                {{ form.facebook_page() }}<br><br>
+                <label for="facebook-post">Post URL:</label>
+                {{ form.facebook_post() }}<br><br>
+                <label for="facebook-text">Enter Text:</label>
+                {{ form.facebook_text() }}<br>
+            </div>
+
+            <div id="instagram-inputs" class="platform-inputs" style="display:none;">
+                <label for="instagram-account">Instagram Username:</label>
+                {{ form.instagram_account() }}<br><br>
+                <label for="instagram-post">Post Link:</label>
+                {{ form.instagram_post() }}<br><br>
+                <label for="instagram-text">Enter Text:</label>
+                {{ form.instagram_text() }}<br>
+            </div>
+
+            <div id="youtube-inputs" class="platform-inputs" style="display:none;">
+                <label for="youtube-video">Video URL:</label>
+                {{ form.youtube_video() }}<br><br>
+                <label for="youtube-channel">Channel Name:</label>
+                {{ form.youtube_channel() }}<br><br>
+                <label for="youtube-Mock-channel">Mock Channel Name:</label>
+                {{ form.youtube_Mock_channel() }}<br><br>
+                <label for="youtube-text">Enter Text:</label>
+                {{ form.youtube_text() }}<br>
+            </div>
+
+            
+            <!-- Analysis Type 
+            <label>Select Analysis Type:</label><br>
+            {{ form.analysis_type() }}  
+            -->
+            <h5> Select Analysis Type:</h5>
+            {% for subfield in form.analysis_type %}
+                <label>{{ subfield() }} {{ subfield.label.text }}</label><br>
+            {% endfor %}
+
+
+            <h5> Select Display Option:</h5>
+            {% for subfield in form.display %}
+                <label>{{ subfield() }} {{ subfield.label.text }}</label><br>
+            {% endfor %}
+            <br>
+            <button type="submit">Analyze</button>
+        </form>
+    </div>
+    <br>
+   
+      
+    <script>
+        // Show/Hide Platform-Specific Inputs
+        document.querySelectorAll('input[name="platform"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                document.querySelectorAll('.platform-inputs').forEach(div => div.style.display = 'none');
+                const selectedPlatform = radio.value;
+                document.getElementById(`${selectedPlatform}-inputs`).style.display = 'block';
+            });
+        });
+    </script>
+
+    <br>
+    <a href="{{ url_for('main.logout') }}">Logout</a>
+</body>
+</html>

@@ -21,4 +21,6 @@ __pycache__/
 # Ignore logs and temporary files
 *.log
 logs/
-__pycache__/
+app/static/videos/SentAna_Intro.mp4
+app/models/lid.176.bin
+

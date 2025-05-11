@@ -45,7 +45,7 @@ Shapely==1.7.1
 SoundFile==0.10.2
 Wand==0.6.13
 XlsxWriter==3.2.0
-absl-py==2.1.0
+absl-py<1.4
 aeppl==0.0.31
 aesara==2.7.3
 affine==2.4.0
